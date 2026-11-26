@@ -760,5 +760,16 @@
   "Unmute my mic in Yogurt": "Yogurt で自分のマイクのミュートを解除",
   "Mic will stay off on resume": "録音を再開してもマイクはオフのままです",
   "Mic mute couldn’t be confirmed.": "マイクがミュートされたか確認できませんでした。",
-  "Mic off. Yogurt can’t hear call audio.": "マイクはオフです。Yogurt に通話音声が届いていません。"
+  "Mic off. Yogurt can’t hear call audio.": "マイクはオフです。Yogurt に通話音声が届いていません。",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "システム設定で Yogurt に画面収録を許可してから、Yogurt を開き直すとスライドを取り込めます。",
+  "Capture slide now": "今すぐスライドを取り込む",
+  "Couldn't capture slides": "スライドを取り込めませんでした",
+  "No screens or windows found": "画面またはウインドウが見つかりません",
+  "Screens": "画面",
+  "Slide {number}": "スライド {number}",
+  "Slides": "スライド",
+  "Slides from {name}": "{name} のスライド",
+  "Stop capturing slides": "スライドの取り込みを停止",
+  "The screen or window is no longer available.": "画面またはウインドウが利用できなくなりました。",
+  "Windows": "ウインドウ"
 }

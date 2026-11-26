@@ -833,5 +833,16 @@
   "Unmute my mic in Yogurt": "Zapnout můj mikrofon v Yogurtu",
   "Mic will stay off on resume": "Po obnovení nahrávání zůstane mikrofon ztlumený",
   "Mic mute couldn’t be confirmed.": "Ztlumení mikrofonu se nepodařilo potvrdit.",
-  "Mic off. Yogurt can’t hear call audio.": "Mikrofon je ztlumený. Yogurt neslyší zvuk hovoru."
+  "Mic off. Yogurt can’t hear call audio.": "Mikrofon je ztlumený. Yogurt neslyší zvuk hovoru.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "V Nastavení systému povolte Yogurtu nahrávat obrazovku a pak Yogurt znovu otevřete, abyste mohli zachytávat snímky.",
+  "Capture slide now": "Zachytit snímek teď",
+  "Couldn't capture slides": "Snímky se nepodařilo zachytit",
+  "No screens or windows found": "Nenalezeny žádné obrazovky ani okna",
+  "Screens": "Obrazovky",
+  "Slide {number}": "Snímek {number}",
+  "Slides": "Snímky",
+  "Slides from {name}": "Snímky z: {name}",
+  "Stop capturing slides": "Přestat zachytávat snímky",
+  "The screen or window is no longer available.": "Obrazovka nebo okno už nejsou k dispozici.",
+  "Windows": "Okna"
 }

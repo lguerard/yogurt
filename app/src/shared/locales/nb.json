@@ -802,5 +802,16 @@
   "Unmute my mic in Yogurt": "Slå på mikrofonen min i Yogurt",
   "Mic will stay off on resume": "Mikrofonen forblir av når opptaket fortsetter",
   "Mic mute couldn’t be confirmed.": "Kunne ikke bekrefte at mikrofonen er av.",
-  "Mic off. Yogurt can’t hear call audio.": "Mikrofonen er av. Yogurt får ikke lyd fra samtalen."
+  "Mic off. Yogurt can’t hear call audio.": "Mikrofonen er av. Yogurt får ikke lyd fra samtalen.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Gi Yogurt tillatelse til å ta opp skjermen i Systeminnstillinger, og åpne Yogurt på nytt for å lagre lysbilder.",
+  "Capture slide now": "Lagre lysbilde nå",
+  "Couldn't capture slides": "Kunne ikke lagre lysbilder",
+  "No screens or windows found": "Fant ingen skjermer eller vinduer",
+  "Screens": "Skjermer",
+  "Slide {number}": "Lysbilde {number}",
+  "Slides": "Lysbilder",
+  "Slides from {name}": "Lysbilder fra {name}",
+  "Stop capturing slides": "Slutt å lagre lysbilder",
+  "The screen or window is no longer available.": "Skjermen eller vinduet er ikke lenger tilgjengelig.",
+  "Windows": "Vinduer"
 }

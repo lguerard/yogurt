@@ -760,5 +760,16 @@
   "Unmute my mic in Yogurt": "Aktifkan mikrofon saya dalam Yogurt",
   "Mic will stay off on resume": "Mikrofon akan kekal senyap apabila rakaman disambung",
   "Mic mute couldn’t be confirmed.": "Mikrofon tidak dapat disahkan telah disenyapkan.",
-  "Mic off. Yogurt can’t hear call audio.": "Mikrofon disenyapkan. Yogurt tidak dapat mendengar audio panggilan."
+  "Mic off. Yogurt can’t hear call audio.": "Mikrofon disenyapkan. Yogurt tidak dapat mendengar audio panggilan.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Benarkan Yogurt merakam skrin anda dalam Seting Sistem, kemudian buka semula Yogurt untuk menangkap slaid.",
+  "Capture slide now": "Tangkap slaid sekarang",
+  "Couldn't capture slides": "Tidak dapat menangkap slaid",
+  "No screens or windows found": "Tiada skrin atau tetingkap ditemui",
+  "Screens": "Skrin",
+  "Slide {number}": "Slaid {number}",
+  "Slides": "Slaid",
+  "Slides from {name}": "Slaid daripada {name}",
+  "Stop capturing slides": "Berhenti menangkap slaid",
+  "The screen or window is no longer available.": "Skrin atau tetingkap tidak lagi tersedia.",
+  "Windows": "Tetingkap"
 }

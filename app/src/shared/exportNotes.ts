@@ -9,6 +9,7 @@ import { projectWebsite } from './project'
 import { docToMd, escapeText, mdToDoc, type PMNode } from './markdown'
 import { clock, turns } from './transcript'
 import type { Meeting, NoteStatus, Segment } from './types'
+import { placeSlides } from './slides'
 
 const kids = (n: PMNode) => n.content ?? []
 const isList = (n: PMNode) => n.type === 'bulletList' || n.type === 'orderedList'
@@ -133,8 +134,37 @@ export function transcriptDoc(lines: Segment[], o: { gap?: boolean } = {}): PMNo
 
 // ---------- file ----------
 
-/** The Markdown file: title, date and a link to Yogurt, people, the notes, then the transcript with names */
-export function toMarkdownFile(meeting: Meeting, notes: string, segments: Segment[], includeCredit = true): string {
+/** A slide for the file: when it was shown (meeting time) and where its picture is, relative to the file */
+export type SlideLink = { ms: number; href: string }
+
+/** A link target Markdown viewers read whole: spaces and brackets escaped, each folder kept */
+export const slideHref = (...parts: string[]): string => parts.map((p) => encodeURIComponent(p).replace(/[()]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`)).join('/')
+
+const slideImage = (n: number, href: string) => `![${escapeText(t('Slide {number}', { number: n }))}](${href})`
+
+/**
+ * The transcript in Markdown with the slides in it: each one just before the first turn that starts at or after the
+ * moment it was shown, the ones shown after the last turn began at the end. Without slides it is the transcript alone.
+ */
+export function transcriptMarkdown(segments: Segment[], slides: SlideLink[] = []): string {
+  if (!slides.length) return docToMd(transcriptDoc(segments, { gap: true }))
+  const all = turns([...segments].sort((a, b) => a.startMs - b.startMs))
+  const { before, after } = placeSlides(all.map((turn) => turn[0].startMs), slides)
+  let n = 0
+  const out: string[] = []
+  all.forEach((turn, i) => {
+    for (const s of before[i]) out.push(slideImage(++n, s.href))
+    out.push(docToMd(transcriptDoc(turn, { gap: true })))
+  })
+  for (const s of after) out.push(slideImage(++n, s.href))
+  return out.join('\n\n')
+}
+
+/**
+ * The Markdown file: title, date and a link to Yogurt, people, the notes, then the transcript with names, and the
+ * meeting's slides in the transcript where they were shown (slides: links relative to the file)
+ */
+export function toMarkdownFile(meeting: Meeting, notes: string, segments: Segment[], includeCredit = true, slides: SlideLink[] = []): string {
   const when = new Date(meeting.startedAt).toLocaleString(language(), { dateStyle: 'long', timeStyle: 'short' })
   const title = meeting.title.replace(/\s+/g, ' ').trim()
   // a small credit on the date line: whoever the file is shared with can find the app
@@ -145,7 +175,7 @@ export function toMarkdownFile(meeting: Meeting, notes: string, segments: Segmen
   const body = notes.replace(/<\/?mine>/g, '').trim()
   const out = [head.join('\n')]
   if (body) out.push(body)
-  if (segments.length) out.push(`## ${t('Transcript')}\n\n${docToMd(transcriptDoc(segments, { gap: true }))}`)
+  if (segments.length || slides.length) out.push(`## ${t('Transcript')}\n\n${transcriptMarkdown(segments, slides)}`)
   return out.join('\n\n') + '\n'
 }
 

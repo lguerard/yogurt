@@ -37,6 +37,7 @@ import { NoteAutosave, registerAutosave } from '../noteAutosave'
 import { People } from '../components/People'
 import { NoteDate } from '../components/NoteDate'
 import { MicMenu } from '../components/MicMenu'
+import { SlidesMenu } from '../components/SlidesMenu'
 import { SpokenMenu } from '../components/SpokenMenu'
 import { RecordingHint } from '../components/RecordingHint'
 import { FolderChip, FolderPicker, type FolderSuggestion } from '../components/FolderPicker'
@@ -516,6 +517,7 @@ export function Note({ id, onTitleChange, at, folderSuggestion, onSource, onResu
           <div className="note-footer-bar">
           <div className="note-status pointer-events-auto flex flex-wrap items-center gap-1.5 text-[11px] text-muted">
             {(recording || m.state === 'prepared') && <><MicMenu recording={recording} paused={recording && m.paused} /><SpokenMenu /><span aria-hidden="true">·</span></>}
+            {recording && !finishing && <><SlidesMenu meetingId={id} /><span aria-hidden="true">·</span></>}
             {saveStatus !== 'failed' && <>
               <p data-testid="note-save-status" data-state={saveStatus} role="status" className="flex items-center gap-1.5">
                 <Lock size={10} aria-hidden="true" />

@@ -790,5 +790,16 @@
   "Unmute my mic in Yogurt": "Mikrofonom bekapcsolása a Yogurtban",
   "Mic will stay off on resume": "Folytatáskor a mikrofon néma marad",
   "Mic mute couldn’t be confirmed.": "Nem sikerült megerősíteni a mikrofon némítását.",
-  "Mic off. Yogurt can’t hear call audio.": "A mikrofon néma. A Yogurt nem érzékeli a hívás hangját."
+  "Mic off. Yogurt can’t hear call audio.": "A mikrofon néma. A Yogurt nem érzékeli a hívás hangját.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Engedélyezd a Rendszerbeállításokban, hogy a Yogurt rögzítse a képernyőt, majd nyisd meg újra a Yogurtot a diák rögzítéséhez.",
+  "Capture slide now": "Dia rögzítése most",
+  "Couldn't capture slides": "Nem sikerült rögzíteni a diákat",
+  "No screens or windows found": "Nem található képernyő vagy ablak",
+  "Screens": "Képernyők",
+  "Slide {number}": "{number}. dia",
+  "Slides": "Diák",
+  "Slides from {name}": "Diák innen: {name}",
+  "Stop capturing slides": "Diák rögzítésének leállítása",
+  "The screen or window is no longer available.": "A képernyő vagy az ablak már nem érhető el.",
+  "Windows": "Ablakok"
 }

@@ -760,5 +760,16 @@
   "Unmute my mic in Yogurt": "在 Yogurt 中取消我的麦克风静音",
   "Mic will stay off on resume": "继续录制后麦克风将保持静音",
   "Mic mute couldn’t be confirmed.": "无法确认麦克风是否已静音。",
-  "Mic off. Yogurt can’t hear call audio.": "麦克风已关闭。Yogurt 无法接收通话音频。"
+  "Mic off. Yogurt can’t hear call audio.": "麦克风已关闭。Yogurt 无法接收通话音频。",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "请在系统设置中允许 Yogurt 录制屏幕，然后重新打开 Yogurt 以截取幻灯片。",
+  "Capture slide now": "立即截取幻灯片",
+  "Couldn't capture slides": "无法截取幻灯片",
+  "No screens or windows found": "未找到屏幕或窗口",
+  "Screens": "屏幕",
+  "Slide {number}": "幻灯片 {number}",
+  "Slides": "幻灯片",
+  "Slides from {name}": "来自 {name} 的幻灯片",
+  "Stop capturing slides": "停止截取幻灯片",
+  "The screen or window is no longer available.": "该屏幕或窗口已不可用。",
+  "Windows": "窗口"
 }

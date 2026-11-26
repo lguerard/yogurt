@@ -1,7 +1,7 @@
 import { app, clipboard, ClipboardItem, dialog, ipcMain, ShareMenu, type BrowserWindow } from 'electron'
-import { mkdtemp, rename, rm, writeFile } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
-import { fileNameFor, toClipboard, toMarkdownFile, transcriptClipboard } from '../shared/exportNotes'
+import { copyFile, mkdir, mkdtemp, readdir, rename, rm, writeFile } from 'node:fs/promises'
+import { basename, dirname, extname, join } from 'node:path'
+import { fileNameFor, slideHref, toClipboard, toMarkdownFile, transcriptClipboard, type SlideLink } from '../shared/exportNotes'
 import type { Store } from './store'
 import { isFake } from './paths'
 import { t } from '../shared/i18n'
@@ -17,7 +17,12 @@ function notesOf(store: Pick<Store, 'notes'>, id: string, side: unknown) {
  * Copy and export. The window only says which meeting and which side; the text is built here from what is saved,
  * and the file goes where the save dialog says, never to a path the window made up.
  */
-export function hookShare(d: { store: Pick<Store, 'meeting' | 'notes' | 'segments'>; window: () => BrowserWindow | undefined; includeRecordingCredit: () => boolean }) {
+/** "<file name>_slides": the folder beside an exported file that holds its slides */
+export const slidesFolderFor = (mdPath: string): string => `${basename(mdPath, extname(mdPath)) || 'notes'}_slides`
+
+export function hookShare(d: { store: Pick<Store, 'meeting' | 'notes' | 'segments'>; window: () => BrowserWindow | undefined; includeRecordingCredit: () => boolean
+  /** the meeting's slides, in the order shown: meeting time and the picture's file (main/slides.ts) */
+  slides?: (id: string) => Array<{ ms: number; path: string }> }) {
   ipcMain.handle('share:app-link', (event, x: unknown, y: unknown) => {
     const win = d.window()
     if (process.platform !== 'darwin' || !win || win.isDestroyed() || win.webContents !== event.sender || event.senderFrame !== event.sender.mainFrame) return false
@@ -63,7 +68,26 @@ export function hookShare(d: { store: Pick<Store, 'meeting' | 'notes' | 'segment
       // Stage on the destination's filesystem: a failed write must not truncate an earlier export.
       staging = await mkdtemp(join(dirname(path), '.yogurt-export-'))
       const file = join(staging, 'notes.md')
-      await writeFile(file, toMarkdownFile(m, notesOf(d.store, m.id, side).md, d.store.segments(m.id), d.includeRecordingCredit()), 'utf8')
+      // slides go in a folder beside the file, numbered in the order shown, so the file's links work wherever both go
+      const slides = d.slides?.(m.id) ?? []
+      const folder = slidesFolderFor(path)
+      const links: SlideLink[] = []
+      if (slides.length) {
+        await mkdir(join(staging, folder))
+        for (const [i, s] of slides.entries()) {
+          const name = `slide-${String(i + 1).padStart(3, '0')}${extname(s.path) || '.jpg'}`
+          await copyFile(s.path, join(staging, folder, name))
+          links.push({ ms: s.ms, href: slideHref(folder, name) })
+        }
+      }
+      await writeFile(file, toMarkdownFile(m, notesOf(d.store, m.id, side).md, d.store.segments(m.id), d.includeRecordingCredit(), links), 'utf8')
+      if (slides.length) {
+        // an earlier export's slides under the same name are replaced, never mixed with these; nothing else there is touched
+        const dest = join(dirname(path), folder)
+        await mkdir(dest, { recursive: true })
+        for (const old of await readdir(dest)) if (/^slide-\d+\.(jpg|png)$/.test(old)) await rm(join(dest, old), { force: true })
+        for (const name of await readdir(join(staging, folder))) await rename(join(staging, folder, name), join(dest, name))
+      }
       await rename(file, path)
       return 'saved'
     } catch (err) {

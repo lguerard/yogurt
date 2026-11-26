@@ -858,5 +858,16 @@
   "Unmute my mic in Yogurt": "إلغاء كتم الميكروفون الخاص بي في Yogurt",
   "Mic will stay off on resume": "سيظل الميكروفون مكتومًا عند الاستئناف",
   "Mic mute couldn’t be confirmed.": "تعذّر التأكد من كتم الميكروفون.",
-  "Mic off. Yogurt can’t hear call audio.": "الميكروفون مكتوم. لا يستطيع Yogurt سماع صوت المكالمة."
+  "Mic off. Yogurt can’t hear call audio.": "الميكروفون مكتوم. لا يستطيع Yogurt سماع صوت المكالمة.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "اسمح لـ Yogurt بتسجيل شاشتك في إعدادات النظام، ثم أعد فتح Yogurt لالتقاط الشرائح.",
+  "Capture slide now": "التقاط شريحة الآن",
+  "Couldn't capture slides": "تعذّر التقاط الشرائح",
+  "No screens or windows found": "لم يتم العثور على شاشات أو نوافذ",
+  "Screens": "الشاشات",
+  "Slide {number}": "الشريحة {number}",
+  "Slides": "الشرائح",
+  "Slides from {name}": "شرائح من {name}",
+  "Stop capturing slides": "إيقاف التقاط الشرائح",
+  "The screen or window is no longer available.": "لم تعد الشاشة أو النافذة متاحة.",
+  "Windows": "النوافذ"
 }

@@ -805,5 +805,16 @@
   "Unmute my mic in Yogurt": "Ενεργοποίηση του μικροφώνου μου στο Yogurt",
   "Mic will stay off on resume": "Το μικρόφωνο θα παραμείνει σε σίγαση κατά τη συνέχιση",
   "Mic mute couldn’t be confirmed.": "Δεν ήταν δυνατή η επιβεβαίωση της σίγασης του μικροφώνου.",
-  "Mic off. Yogurt can’t hear call audio.": "Μικρόφωνο σε σίγαση. Το Yogurt δεν λαμβάνει τον ήχο της κλήσης."
+  "Mic off. Yogurt can’t hear call audio.": "Μικρόφωνο σε σίγαση. Το Yogurt δεν λαμβάνει τον ήχο της κλήσης.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Επιτρέψτε στο Yogurt να καταγράφει την οθόνη σας στις Ρυθμίσεις συστήματος και ανοίξτε ξανά το Yogurt για λήψη διαφανειών.",
+  "Capture slide now": "Λήψη διαφάνειας τώρα",
+  "Couldn't capture slides": "Δεν ήταν δυνατή η λήψη διαφανειών",
+  "No screens or windows found": "Δεν βρέθηκαν οθόνες ή παράθυρα",
+  "Screens": "Οθόνες",
+  "Slide {number}": "Διαφάνεια {number}",
+  "Slides": "Διαφάνειες",
+  "Slides from {name}": "Διαφάνειες από {name}",
+  "Stop capturing slides": "Διακοπή λήψης διαφανειών",
+  "The screen or window is no longer available.": "Η οθόνη ή το παράθυρο δεν είναι πλέον διαθέσιμο.",
+  "Windows": "Παράθυρα"
 }

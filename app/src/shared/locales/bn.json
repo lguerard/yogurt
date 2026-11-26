@@ -790,5 +790,16 @@
   "Unmute my mic in Yogurt": "Yogurt-এ আমার মাইক আনমিউট করুন",
   "Mic will stay off on resume": "রেকর্ডিং আবার শুরু হলে মাইক বন্ধ থাকবে",
   "Mic mute couldn’t be confirmed.": "মাইক মিউট হয়েছে কি না নিশ্চিত করা যায়নি।",
-  "Mic off. Yogurt can’t hear call audio.": "মাইক বন্ধ। Yogurt কলের শব্দ শুনতে পাচ্ছে না।"
+  "Mic off. Yogurt can’t hear call audio.": "মাইক বন্ধ। Yogurt কলের শব্দ শুনতে পাচ্ছে না।",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "সিস্টেম সেটিংসে Yogurt-কে আপনার স্ক্রিন রেকর্ড করার অনুমতি দিন, তারপর স্লাইড ক্যাপচার করতে Yogurt আবার খুলুন।",
+  "Capture slide now": "এখনই স্লাইড ক্যাপচার করুন",
+  "Couldn't capture slides": "স্লাইড ক্যাপচার করা যায়নি",
+  "No screens or windows found": "কোনো স্ক্রিন বা উইন্ডো পাওয়া যায়নি",
+  "Screens": "স্ক্রিন",
+  "Slide {number}": "স্লাইড {number}",
+  "Slides": "স্লাইড",
+  "Slides from {name}": "{name} থেকে স্লাইড",
+  "Stop capturing slides": "স্লাইড ক্যাপচার বন্ধ করুন",
+  "The screen or window is no longer available.": "স্ক্রিন বা উইন্ডোটি আর উপলব্ধ নেই।",
+  "Windows": "উইন্ডো"
 }

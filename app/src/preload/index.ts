@@ -1,4 +1,5 @@
 import type { MeterPacket } from '../shared/speechWave'
+import type { SlideCaptureView } from '../shared/slides'
 import { audioUpload } from './audioUpload'
 import type { WidgetLayout } from '../shared/widgetMorph'
 import { contextBridge, ipcRenderer } from 'electron'
@@ -145,6 +146,19 @@ const api: YogurtApi = {
     save: (id, side) => ipcRenderer.invoke('share:save', id, side),
   },
   audioUpload,
+  slides: {
+    sources: () => ipcRenderer.invoke('slides:sources'),
+    start: (meetingId, sourceId) => ipcRenderer.invoke('slides:start', meetingId, sourceId),
+    stop: () => ipcRenderer.invoke('slides:stop'),
+    capture: () => ipcRenderer.invoke('slides:capture'),
+    state: () => ipcRenderer.invoke('slides:state'),
+    onState: (cb) => {
+      const on = (_e: unknown, v: SlideCaptureView | null) => cb(v)
+      ipcRenderer.on('slides:state', on)
+      return () => { ipcRenderer.removeListener('slides:state', on) }
+    },
+    openSettings: () => ipcRenderer.invoke('slides:open-settings'),
+  },
   audio: {
     delete: (id) => ipcRenderer.invoke('audio:delete', id),
     onDeleted: (cb) => {

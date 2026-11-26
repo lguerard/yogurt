@@ -760,5 +760,16 @@
   "Unmute my mic in Yogurt": "Bật micrô của tôi trong Yogurt",
   "Mic will stay off on resume": "Micrô sẽ vẫn tắt khi tiếp tục ghi âm",
   "Mic mute couldn’t be confirmed.": "Không thể xác nhận micrô đã tắt.",
-  "Mic off. Yogurt can’t hear call audio.": "Micrô đã tắt. Yogurt không nghe được âm thanh cuộc gọi."
+  "Mic off. Yogurt can’t hear call audio.": "Micrô đã tắt. Yogurt không nghe được âm thanh cuộc gọi.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Hãy cho phép Yogurt ghi màn hình trong Cài đặt hệ thống, rồi mở lại Yogurt để chụp trang chiếu.",
+  "Capture slide now": "Chụp trang chiếu ngay",
+  "Couldn't capture slides": "Không thể chụp trang chiếu",
+  "No screens or windows found": "Không tìm thấy màn hình hoặc cửa sổ",
+  "Screens": "Màn hình",
+  "Slide {number}": "Trang chiếu {number}",
+  "Slides": "Trang chiếu",
+  "Slides from {name}": "Trang chiếu từ {name}",
+  "Stop capturing slides": "Dừng chụp trang chiếu",
+  "The screen or window is no longer available.": "Màn hình hoặc cửa sổ không còn khả dụng.",
+  "Windows": "Cửa sổ"
 }
