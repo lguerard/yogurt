@@ -766,6 +766,7 @@
   "Couldn't capture slides": "スライドを取り込めませんでした",
   "No screens or windows found": "画面またはウインドウが見つかりません",
   "Screens": "画面",
+  "Slide {number}": "スライド {number}",
   "Slides": "スライド",
   "Slides from {name}": "{name} のスライド",
   "Stop capturing slides": "スライドの取り込みを停止",

@@ -808,6 +808,7 @@
   "Couldn't capture slides": "Kunne ikke lagre lysbilder",
   "No screens or windows found": "Fant ingen skjermer eller vinduer",
   "Screens": "Skjermer",
+  "Slide {number}": "Lysbilde {number}",
   "Slides": "Lysbilder",
   "Slides from {name}": "Lysbilder fra {name}",
   "Stop capturing slides": "Slutt å lagre lysbilder",

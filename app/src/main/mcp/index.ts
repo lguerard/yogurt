@@ -38,10 +38,11 @@ export async function hookMcp(d: {
   /** the app's own actions, for the tools that ask or change something */
   app: McpApp
   audio: (id: string) => Promise<Array<{ track: 'me' | 'them'; path: string }>>
+  slides?: (id: string) => Array<{ ms: number; path: string }>
   /** Settings is told when apps come and go */
   send: (clients: string[]) => void
 }) {
-  const mcp = createMcp({ store: d.store, enabled: d.enabled, changesEnabled: d.changesEnabled, me: d.me, version: d.version, audio: d.audio, app: d.app, platform: process.platform })
+  const mcp = createMcp({ store: d.store, enabled: d.enabled, changesEnabled: d.changesEnabled, me: d.me, version: d.version, audio: d.audio, slides: d.slides, app: d.app, platform: process.platform })
   let server: Awaited<ReturnType<typeof serveMcp>> | undefined
   const address = mcpAddress(process.platform, d.profile, randomBytes(16).toString('hex'))
   try {

@@ -766,6 +766,7 @@
   "Couldn't capture slides": "无法截取幻灯片",
   "No screens or windows found": "未找到屏幕或窗口",
   "Screens": "屏幕",
+  "Slide {number}": "幻灯片 {number}",
   "Slides": "幻灯片",
   "Slides from {name}": "来自 {name} 的幻灯片",
   "Stop capturing slides": "停止截取幻灯片",

@@ -825,6 +825,7 @@
   "Couldn't capture slides": "Diapozitivele nu au putut fi capturate",
   "No screens or windows found": "Nu s-au găsit ecrane sau ferestre",
   "Screens": "Ecrane",
+  "Slide {number}": "Diapozitivul {number}",
   "Slides": "Diapozitive",
   "Slides from {name}": "Diapozitive din {name}",
   "Stop capturing slides": "Opriți capturarea diapozitivelor",

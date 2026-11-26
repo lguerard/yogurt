@@ -808,6 +808,7 @@
   "Couldn't capture slides": "Det gick inte att spara bilder",
   "No screens or windows found": "Inga skärmar eller fönster hittades",
   "Screens": "Skärmar",
+  "Slide {number}": "Bild {number}",
   "Slides": "Bilder",
   "Slides from {name}": "Bilder från {name}",
   "Stop capturing slides": "Sluta spara bilder",

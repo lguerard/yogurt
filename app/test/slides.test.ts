@@ -2,8 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { mkdtempSync, readdirSync, rmSync, writeFileSync, mkdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { appWindowName, appWindowsOf, cropFor, difference, displayFor, electronXid, GRID, isNewSlide, physicalBounds, screenFor, screenSize, signature, slideFileName, slidesIn, xidOf, xwinId, type DisplayArea } from '../src/shared/slides'
+import { appWindowName, appWindowsOf, cropFor, difference, displayFor, electronXid, GRID, isNewSlide, physicalBounds, placeSlides, screenFor, screenSize, signature, slideFileName, slidesIn, xidOf, xwinId, type DisplayArea } from '../src/shared/slides'
+import { slideHref, toMarkdownFile, transcriptMarkdown } from '../src/shared/exportNotes'
+import { docToMd } from '../src/shared/markdown'
+import { transcriptDoc } from '../src/shared/exportNotes'
 import { createSlides, listSlides, type SlideImage } from '../src/main/slides'
+import type { Meeting, Segment } from '../src/shared/types'
 
 /** a w×h BGRA picture: white with a black band from row top to row bottom (fractions of the height) */
 function picture(w: number, h: number, bands: Array<[number, number]> = [], cols: [number, number] = [0, 1]): Uint8Array {
@@ -54,6 +58,43 @@ describe('slide files', () => {
     expect(slideFileName(1234.6)).toBe('slide-000001235.jpg')
     expect(slidesIn(['slide-000090000.jpg', 'notes.txt', 'slide-000001000.jpg', 'slide-000002000.jpg.part', 'slide-5.png']))
       .toEqual([{ file: 'slide-5.png', ms: 5 }, { file: 'slide-000001000.jpg', ms: 1000 }, { file: 'slide-000090000.jpg', ms: 90000 }])
+  })
+})
+
+describe('placeSlides', () => {
+  it('puts each slide before the first turn starting at or after it, the late ones at the end', () => {
+    const r = placeSlides([0, 5000, 10_000], [{ ms: 12_000 }, { ms: 0 }, { ms: 5000 }, { ms: 4999 }, { ms: 1 }])
+    expect(r.before).toEqual([[{ ms: 0 }], [{ ms: 1 }, { ms: 4999 }, { ms: 5000 }], []])
+    expect(r.after).toEqual([{ ms: 12_000 }])
+  })
+  it('puts everything at the end without turns', () => {
+    expect(placeSlides([], [{ ms: 3 }])).toEqual({ before: [], after: [{ ms: 3 }] })
+  })
+})
+
+const meeting: Meeting = { id: 'm1', title: 'Review', startedAt: new Date(2026, 9, 29, 10).getTime(), endedAt: null, eventId: null, app: null, attendees: [], state: 'done', language: null, titleSource: 'user' }
+const seg = (track: 'me' | 'them', startMs: number, text: string): Segment => ({ id: startMs, meetingId: 'm1', track, startMs, endMs: startMs + 2000, text, speaker: null })
+const segments = [seg('me', 0, 'Welcome.'), seg('them', 20_000, 'First slide.'), seg('me', 60_000, 'Next one.')]
+
+describe('Markdown with slides', () => {
+  it('is the transcript unchanged without slides', () => {
+    expect(transcriptMarkdown(segments)).toBe(docToMd(transcriptDoc(segments, { gap: true })))
+    expect(toMarkdownFile(meeting, 'notes', segments, false, [])).toBe(toMarkdownFile(meeting, 'notes', segments, false))
+  })
+  it('puts the summary first, then the transcript with each slide where it was shown', () => {
+    const file = toMarkdownFile(meeting, '## Summary\n- shipped', segments, false, [
+      { ms: 15_000, href: 'a/slide-001.jpg' }, { ms: 61_000, href: 'a/slide-003.jpg' }, { ms: 20_000, href: 'a/slide-002.jpg' },
+    ])
+    const at = ['## Summary', '## Transcript', '**You** (0:00)', '![Slide 1](a/slide-001.jpg)', '![Slide 2](a/slide-002.jpg)', '**Them** (0:20)', '**You** (1:00)', '![Slide 3](a/slide-003.jpg)'].map((s) => file.indexOf(s))
+    expect(at.every((i) => i >= 0)).toBe(true)
+    expect([...at].sort((a, b) => a - b)).toEqual(at)
+    expect(file.trimEnd().endsWith('![Slide 3](a/slide-003.jpg)')).toBe(true)
+  })
+  it('keeps a transcript section for slides even when nothing was heard', () => {
+    expect(toMarkdownFile(meeting, 'x', [], false, [{ ms: 0, href: 's.jpg' }])).toContain('## Transcript\n\n![Slide 1](s.jpg)')
+  })
+  it('escapes spaces and brackets in links', () => {
+    expect(slideHref('Review (draft) 2026-10-29_slides', 'slide-001.jpg')).toBe('Review%20%28draft%29%202026-10-29_slides/slide-001.jpg')
   })
 })
 

@@ -821,6 +821,7 @@
   "Couldn't capture slides": "No se pudieron capturar las diapositivas",
   "No screens or windows found": "No se encontraron pantallas ni ventanas",
   "Screens": "Pantallas",
+  "Slide {number}": "Diapositiva {number}",
   "Slides": "Diapositivas",
   "Slides from {name}": "Diapositivas de {name}",
   "Stop capturing slides": "Dejar de capturar diapositivas",

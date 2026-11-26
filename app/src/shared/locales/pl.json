@@ -844,6 +844,7 @@
   "Couldn't capture slides": "Nie udało się przechwycić slajdów",
   "No screens or windows found": "Nie znaleziono ekranów ani okien",
   "Screens": "Ekrany",
+  "Slide {number}": "Slajd {number}",
   "Slides": "Slajdy",
   "Slides from {name}": "Slajdy z: {name}",
   "Stop capturing slides": "Zatrzymaj przechwytywanie slajdów",

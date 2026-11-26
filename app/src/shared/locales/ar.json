@@ -864,6 +864,7 @@
   "Couldn't capture slides": "تعذّر التقاط الشرائح",
   "No screens or windows found": "لم يتم العثور على شاشات أو نوافذ",
   "Screens": "الشاشات",
+  "Slide {number}": "الشريحة {number}",
   "Slides": "الشرائح",
   "Slides from {name}": "شرائح من {name}",
   "Stop capturing slides": "إيقاف التقاط الشرائح",

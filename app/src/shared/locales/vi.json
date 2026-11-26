@@ -766,6 +766,7 @@
   "Couldn't capture slides": "Không thể chụp trang chiếu",
   "No screens or windows found": "Không tìm thấy màn hình hoặc cửa sổ",
   "Screens": "Màn hình",
+  "Slide {number}": "Trang chiếu {number}",
   "Slides": "Trang chiếu",
   "Slides from {name}": "Trang chiếu từ {name}",
   "Stop capturing slides": "Dừng chụp trang chiếu",

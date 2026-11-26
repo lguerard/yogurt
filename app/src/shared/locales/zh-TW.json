@@ -766,6 +766,7 @@
   "Couldn't capture slides": "無法擷取投影片",
   "No screens or windows found": "找不到螢幕或視窗",
   "Screens": "螢幕",
+  "Slide {number}": "投影片 {number}",
   "Slides": "投影片",
   "Slides from {name}": "來自 {name} 的投影片",
   "Stop capturing slides": "停止擷取投影片",

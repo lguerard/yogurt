@@ -1,5 +1,6 @@
 import { AUDIO_SPEAKER } from '../../shared/audioUpload'
 import type { ContextChip } from '../../shared/askContext'
+import { pathToFileURL } from 'node:url'
 import { toMarkdownFile } from '../../shared/exportNotes'
 import type { LibrarySource, StartResult } from '../../shared/types'
 import type { CalEvent, CalendarStatus } from '../calendar'
@@ -58,6 +59,8 @@ export type McpDeps = {
   version: string
   /** a finished meeting's audio files (none while it records) */
   audio: (id: string) => Promise<Array<{ track: Track; path: string }>>
+  /** the meeting's slides, in the order shown: meeting time and the picture's file */
+  slides?: (id: string) => Array<{ ms: number; path: string }>
   app: McpApp
   /** the computer, for the words other apps' models read (a Mac when left out) */
   platform?: string
@@ -99,7 +102,7 @@ const readTools = (platform: string): Tool[] => [
     inputSchema: { type: 'object', properties: {} } },
   { name: 'get_settings', description: "Yogurt's settings that shape notes: the person's name, the interface language, the language spoken in meetings, the language summaries are written in, custom words spelled right in transcripts, whether recording stops when a call ends, and whether audio is kept.",
     inputSchema: { type: 'object', properties: {} } },
-  { name: 'export_meeting', description: "A meeting as one Markdown document, exactly as Yogurt's Export Markdown saves it: title, date, people, the notes, and the transcript. side \"summary\" (default) uses Yogurt's summary, \"my_notes\" the person's own notes.",
+  { name: 'export_meeting', description: "A meeting as one Markdown document, exactly as Yogurt's Export Markdown saves it: title, date, people, the notes, and the transcript, with any slides captured from the screen as images (file paths on this computer) where they were shown. side \"summary\" (default) uses Yogurt's summary, \"my_notes\" the person's own notes.",
     inputSchema: { type: 'object', properties: { id: idArg, side: { type: 'string', enum: ['summary', 'my_notes'] } }, required: ['id'] } },
   { name: 'get_audio', description: platform === 'darwin'
     ? "A meeting's recording as files on this Mac: one per side (track me: the person's microphone; them: the other side of the call), AAC in .m4a. Gives paths, which apps on this Mac can open."
@@ -260,7 +263,8 @@ export function createMcp(d: McpDeps): Mcp {
       const m = meetingOf(a.id)
       const n = d.store.notes(m.id)
       const side = oneOf(a, 'side', ['summary', 'my_notes'] as const) ?? 'summary'
-      return toMarkdownFile(m, side === 'summary' && n.enhanced != null ? n.enhanced : n.mine, d.store.segments(m.id))
+      const slides = (d.slides?.(m.id) ?? []).map((x) => ({ ms: x.ms, href: pathToFileURL(x.path).href }))
+      return toMarkdownFile(m, side === 'summary' && n.enhanced != null ? n.enhanced : n.mine, d.store.segments(m.id), true, slides)
     },
     async get_audio(a) {
       const m = meetingOf(a.id)
