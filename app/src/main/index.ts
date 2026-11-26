@@ -38,7 +38,8 @@ import { readSysInfo, toHardware, type GpuProbe } from './hardware'
 import { realDeps } from './downloader'
 import { wavOf } from './fakeCapture'
 import { askFakeNotifications, chatMeetings, fakeAccess, fakeDownloadDeps, fakeHardware, fakeHelper, fakeNow, installFakeHooks, manyMeetings, mediaCalls, waitForFakeAudioMetadata } from './fake'
-import { createPermissions } from './permissions'
+import { createPermissions, SETTINGS_URL } from './permissions'
+import { hookSlides } from './slidesIpc'
 import { hookPreferences, onboardingShowing } from './preferences'
 import { loginItemOn, openedAtLogin, setLoginItem, syncLoginItem } from './loginItem'
 import { createMedia } from './media'
@@ -931,6 +932,16 @@ app.whenReady().then(() => {
   // the mic picker under the note's bar: the mics, the chosen one, and switching while recording
   hookMics({ helper: micListHelper(process.platform) === 'system' || isFake() ? runHelper : audioHelper.run, settingsFile, send: (channel, payload) => win?.webContents.send(channel, payload) })
   hookShare({ store, window: () => win, includeRecordingCredit: () => includesRecordingCredit(loadSettings(settingsFile)) })
+  // slides of a screen or window while recording, on the transcript's clock (the recorder's: the last audio heard)
+  let slideMs = 0
+  const slides = hookSlides({
+    dirOf: meetingDir, recordingId: () => activeMeeting()?.id ?? null, paused: recordingPaused, window: () => win,
+    time: () => { const c = activeCapture(); if (c) slideMs = c.endMs; return slideMs },
+    // the Mac's Screen Recording list is the pane call audio uses too
+    openSettings: () => { if (isFake()) systemSettings.push(SETTINGS_URL.systemAudio); else void shell.openExternal(SETTINGS_URL.systemAudio) },
+  })
+  onMeetingStart(() => { slideMs = 0 })
+  onMeetingStop((m) => slides.stop(m.id))
   const foldersChanged = () => { win?.webContents.send('folders:changed'); folderSuggestions.refresh() }
   hookFolders({ store, changed: foldersChanged })
   // every meeting to one file and back; what an import adds shows up on home
