@@ -992,6 +992,7 @@ app.whenReady().then(() => {
       await rejoined; await recordingSettled(id)
       return (['me', 'them'] as const).flatMap((track) => { const path = trackFile(meetingDir(id), track, audioKinds); return path ? [{ track, path }] : [] })
     },
+    slides: (id) => listSlides(meetingDir(id)),
     send: (clients) => { quietStart?.clients(clients.length); win?.webContents.send('mcp:clients', clients) },
   })
   // notes only for a meeting that exists: saving one for an unknown id would throw (its row must exist)
