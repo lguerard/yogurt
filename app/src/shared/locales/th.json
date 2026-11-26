@@ -766,6 +766,7 @@
   "Couldn't capture slides": "ไม่สามารถจับภาพสไลด์ได้",
   "No screens or windows found": "ไม่พบหน้าจอหรือหน้าต่าง",
   "Screens": "หน้าจอ",
+  "Slide {number}": "สไลด์ {number}",
   "Slides": "สไลด์",
   "Slides from {name}": "สไลด์จาก {name}",
   "Stop capturing slides": "หยุดจับภาพสไลด์",

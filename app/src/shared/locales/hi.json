@@ -796,6 +796,7 @@
   "Couldn't capture slides": "स्लाइड कैप्चर नहीं हो सकीं",
   "No screens or windows found": "कोई स्क्रीन या विंडो नहीं मिली",
   "Screens": "स्क्रीन",
+  "Slide {number}": "स्लाइड {number}",
   "Slides": "स्लाइड",
   "Slides from {name}": "{name} से स्लाइड",
   "Stop capturing slides": "स्लाइड कैप्चर करना बंद करें",

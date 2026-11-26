@@ -839,6 +839,7 @@
   "Couldn't capture slides": "Snímky se nepodařilo zachytit",
   "No screens or windows found": "Nenalezeny žádné obrazovky ani okna",
   "Screens": "Obrazovky",
+  "Slide {number}": "Snímek {number}",
   "Slides": "Snímky",
   "Slides from {name}": "Snímky z: {name}",
   "Stop capturing slides": "Přestat zachytávat snímky",

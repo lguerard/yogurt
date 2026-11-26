@@ -814,6 +814,7 @@
   "Couldn't capture slides": "Dioja ei voitu tallentaa",
   "No screens or windows found": "Näyttöjä tai ikkunoita ei löytynyt",
   "Screens": "Näytöt",
+  "Slide {number}": "Dia {number}",
   "Slides": "Diat",
   "Slides from {name}": "Diat lähteestä {name}",
   "Stop capturing slides": "Lopeta diojen tallennus",

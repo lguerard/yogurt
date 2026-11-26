@@ -766,6 +766,7 @@
   "Couldn't capture slides": "Tidak dapat mengambil slide",
   "No screens or windows found": "Tidak ada layar atau jendela yang ditemukan",
   "Screens": "Layar",
+  "Slide {number}": "Slide {number}",
   "Slides": "Slide",
   "Slides from {name}": "Slide dari {name}",
   "Stop capturing slides": "Berhenti mengambil slide",

@@ -29,6 +29,21 @@ export function slidesIn(names: string[]): Slide[] {
   }).sort((a, b) => a.ms - b.ms || a.file.localeCompare(b.file))
 }
 
+/**
+ * Where each slide goes among the transcript's turns: just before the first turn that starts at or after it was shown.
+ * before[i] are the slides to put before turn i; after, the ones shown after the last turn began.
+ */
+export function placeSlides<S extends { ms: number }>(turnStarts: number[], slides: S[]): { before: S[][]; after: S[] } {
+  const before: S[][] = turnStarts.map(() => [])
+  const after: S[] = []
+  for (const s of [...slides].sort((a, b) => a.ms - b.ms)) {
+    const i = turnStarts.findIndex((start) => start >= s.ms)
+    if (i < 0) after.push(s)
+    else before[i].push(s)
+  }
+  return { before, after }
+}
+
 // ---------- telling a new slide from the same one ----------
 
 /** A picture boiled down to GRID×GRID grey levels: enough to see a new slide, too coarse to see a cursor or noise */

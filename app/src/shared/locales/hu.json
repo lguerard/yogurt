@@ -796,6 +796,7 @@
   "Couldn't capture slides": "Nem sikerült rögzíteni a diákat",
   "No screens or windows found": "Nem található képernyő vagy ablak",
   "Screens": "Képernyők",
+  "Slide {number}": "{number}. dia",
   "Slides": "Diák",
   "Slides from {name}": "Diák innen: {name}",
   "Stop capturing slides": "Diák rögzítésének leállítása",

@@ -808,6 +808,7 @@
   "Couldn't capture slides": "Folien konnten nicht aufgenommen werden",
   "No screens or windows found": "Keine Bildschirme oder Fenster gefunden",
   "Screens": "Bildschirme",
+  "Slide {number}": "Folie {number}",
   "Slides": "Folien",
   "Slides from {name}": "Folien von {name}",
   "Stop capturing slides": "Folienaufnahme beenden",

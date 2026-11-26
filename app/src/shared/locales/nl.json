@@ -808,6 +808,7 @@
   "Couldn't capture slides": "Kan dia’s niet vastleggen",
   "No screens or windows found": "Geen schermen of vensters gevonden",
   "Screens": "Schermen",
+  "Slide {number}": "Dia {number}",
   "Slides": "Dia’s",
   "Slides from {name}": "Dia’s van {name}",
   "Stop capturing slides": "Stoppen met dia’s vastleggen",

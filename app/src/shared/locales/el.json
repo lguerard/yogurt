@@ -811,6 +811,7 @@
   "Couldn't capture slides": "Δεν ήταν δυνατή η λήψη διαφανειών",
   "No screens or windows found": "Δεν βρέθηκαν οθόνες ή παράθυρα",
   "Screens": "Οθόνες",
+  "Slide {number}": "Διαφάνεια {number}",
   "Slides": "Διαφάνειες",
   "Slides from {name}": "Διαφάνειες από {name}",
   "Stop capturing slides": "Διακοπή λήψης διαφανειών",

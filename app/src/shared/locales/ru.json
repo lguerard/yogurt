@@ -836,6 +836,7 @@
   "Couldn't capture slides": "Не удалось сохранить слайды",
   "No screens or windows found": "Экраны и окна не найдены",
   "Screens": "Экраны",
+  "Slide {number}": "Слайд {number}",
   "Slides": "Слайды",
   "Slides from {name}": "Слайды: {name}",
   "Stop capturing slides": "Прекратить сохранять слайды",

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { rename, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -182,5 +182,33 @@ describe('share:save', () => {
     expect(await call('share:save', 'nope', 'mine')).toBe('failed')
     expect(await call('share:save', 7, 'mine')).toBe('failed')
     expect(writeFile).not.toHaveBeenCalled()
+  })
+})
+
+describe('share:save with slides', () => {
+  it('writes the slides into a folder beside the file and links them where they were shown', async () => {
+    const source = mkdtempSync(join(tmpdir(), 'yogurt-share-slides-'))
+    try {
+      writeFileSync(join(source, 'slide-000000500.jpg'), 'one')
+      writeFileSync(join(source, 'slide-000090000.jpg'), 'two')
+      segments = [{ id: 1, meetingId: 'm', track: 'me', startMs: 1000, endMs: 2000, text: 'Hello', speaker: null }]
+      state.dialog = { canceled: false, filePath: join(dir, 'My notes.md') }
+      mkdirSync(join(dir, 'My notes_slides'))
+      writeFileSync(join(dir, 'My notes_slides', 'slide-009.jpg'), 'old export')
+      writeFileSync(join(dir, 'My notes_slides', 'keep.txt'), 'theirs')
+      hookShare({ store: store as never, includeRecordingCredit: () => false, window: () => undefined,
+        slides: () => [{ ms: 500, path: join(source, 'slide-000000500.jpg') }, { ms: 90_000, path: join(source, 'slide-000090000.jpg') }] })
+      expect(await call('share:save', 'm', 'mine')).toBe('saved')
+      const md = readFileSync(join(dir, 'My notes.md'), 'utf8')
+      expect(md).toContain('## Transcript\n\n![Slide 1](My%20notes_slides/slide-001.jpg)\n\n**You** (0:01)\n\nHello\n\n![Slide 2](My%20notes_slides/slide-002.jpg)\n')
+      expect(readdirSync(join(dir, 'My notes_slides')).sort()).toEqual(['keep.txt', 'slide-001.jpg', 'slide-002.jpg'])
+      expect(readFileSync(join(dir, 'My notes_slides', 'slide-002.jpg'), 'utf8')).toBe('two')
+      expect(readdirSync(dir).sort()).toEqual(['My notes.md', 'My notes_slides'])
+    } finally { rmSync(source, { recursive: true, force: true }) }
+  })
+  it('writes no folder when the meeting has no slides', async () => {
+    hookShare({ store: store as never, includeRecordingCredit: () => true, window: () => undefined, slides: () => [] })
+    expect(await call('share:save', 'm', 'mine')).toBe('saved')
+    expect(readdirSync(dir)).toEqual(['notes.md'])
   })
 })

@@ -818,6 +818,7 @@
   "Couldn't capture slides": "לא ניתן היה לצלם שקפים",
   "No screens or windows found": "לא נמצאו מסכים או חלונות",
   "Screens": "מסכים",
+  "Slide {number}": "שקף {number}",
   "Slides": "שקפים",
   "Slides from {name}": "שקפים מ-{name}",
   "Stop capturing slides": "הפסקת צילום השקפים",

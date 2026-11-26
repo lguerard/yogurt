@@ -314,6 +314,7 @@
   "Couldn't capture slides": "Couldn't capture slides",
   "No screens or windows found": "No screens or windows found",
   "Screens": "Screens",
+  "Slide {number}": "Slide {number}",
   "Slides": "Slides",
   "Slides from {name}": "Slides from {name}",
   "Stop capturing slides": "Stop capturing slides",

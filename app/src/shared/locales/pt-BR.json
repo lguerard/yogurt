@@ -824,6 +824,7 @@
   "Couldn't capture slides": "Não foi possível capturar os slides",
   "No screens or windows found": "Nenhuma tela ou janela encontrada",
   "Screens": "Telas",
+  "Slide {number}": "Slide {number}",
   "Slides": "Slides",
   "Slides from {name}": "Slides de {name}",
   "Stop capturing slides": "Parar de capturar slides",

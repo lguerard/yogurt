@@ -766,6 +766,7 @@
   "Couldn't capture slides": "슬라이드를 캡처할 수 없습니다",
   "No screens or windows found": "화면이나 윈도우를 찾을 수 없습니다",
   "Screens": "화면",
+  "Slide {number}": "슬라이드 {number}",
   "Slides": "슬라이드",
   "Slides from {name}": "{name}의 슬라이드",
   "Stop capturing slides": "슬라이드 캡처 중지",

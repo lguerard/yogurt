@@ -827,6 +827,7 @@
   "Couldn't capture slides": "Impossibile acquisire le slide",
   "No screens or windows found": "Nessuno schermo o finestra trovati",
   "Screens": "Schermi",
+  "Slide {number}": "Slide {number}",
   "Slides": "Slide",
   "Slides from {name}": "Slide da {name}",
   "Stop capturing slides": "Interrompi acquisizione slide",

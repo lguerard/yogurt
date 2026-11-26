@@ -796,6 +796,7 @@
   "Couldn't capture slides": "Slaytlar yakalanamadı",
   "No screens or windows found": "Ekran veya pencere bulunamadı",
   "Screens": "Ekranlar",
+  "Slide {number}": "Slayt {number}",
   "Slides": "Slaytlar",
   "Slides from {name}": "{name} slaytları",
   "Stop capturing slides": "Slayt yakalamayı durdur",

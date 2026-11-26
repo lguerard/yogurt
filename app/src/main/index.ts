@@ -40,6 +40,7 @@ import { wavOf } from './fakeCapture'
 import { askFakeNotifications, chatMeetings, fakeAccess, fakeDownloadDeps, fakeHardware, fakeHelper, fakeNow, installFakeHooks, manyMeetings, mediaCalls, waitForFakeAudioMetadata } from './fake'
 import { createPermissions, SETTINGS_URL } from './permissions'
 import { hookSlides } from './slidesIpc'
+import { listSlides } from './slides'
 import { hookPreferences, onboardingShowing } from './preferences'
 import { loginItemOn, openedAtLogin, setLoginItem, syncLoginItem } from './loginItem'
 import { createMedia } from './media'
@@ -931,7 +932,7 @@ app.whenReady().then(() => {
   })
   // the mic picker under the note's bar: the mics, the chosen one, and switching while recording
   hookMics({ helper: micListHelper(process.platform) === 'system' || isFake() ? runHelper : audioHelper.run, settingsFile, send: (channel, payload) => win?.webContents.send(channel, payload) })
-  hookShare({ store, window: () => win, includeRecordingCredit: () => includesRecordingCredit(loadSettings(settingsFile)) })
+  hookShare({ store, window: () => win, includeRecordingCredit: () => includesRecordingCredit(loadSettings(settingsFile)), slides: (id) => listSlides(meetingDir(id)) })
   // slides of a screen or window while recording, on the transcript's clock (the recorder's: the last audio heard)
   let slideMs = 0
   const slides = hookSlides({
