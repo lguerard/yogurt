@@ -45,6 +45,12 @@ DISPLAY=:99 xterm -T "Second window" -e sleep 600 >/dev/null 2>&1 &
 sleep 3
 check "the xterm title" "v['title'] in ('Meet - abc-defg-hij', 'Second window')" "$(DISPLAY=:99 "$BIN" browser-title xterm)"
 check "no window for an app that is not open" "v == {'title': None}" "$(DISPLAY=:99 "$BIN" browser-title not-running-here)"
+WINS=$(DISPLAY=:99 "$BIN" app-windows xterm)
+echo "app-windows: $WINS"
+check "app-windows lists the xterms once, with where they are" "sorted(w['title'] for w in v) == ['Meet - abc-defg-hij', 'Second window'] and all(w['app'] == 'xterm' and w['w'] >= 200 and w['h'] >= 150 for w in v) and len({w['id'] for w in v}) == 2" "$WINS"
+check "app-windows keys" "all(sorted(w) == ['app', 'h', 'id', 'title', 'w', 'x', 'y'] for w in v)" "$WINS"
+check "app-windows for an app that is not open" 'v == []' "$(DISPLAY=:99 "$BIN" app-windows not-running-here)"
+check "app-windows with no X server" 'v == []' "$(env -u DISPLAY "$BIN" app-windows xterm)"
 check "no X server (pure Wayland): null" "v == {'title': None}" "$(env -u DISPLAY "$BIN" browser-title xterm)"
 
 # names in calls: no accessibility bus on the runner, so the watch says why and ends when its stdin closes
