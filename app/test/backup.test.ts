@@ -294,6 +294,9 @@ describe('backup file', { timeout: 60_000 }, () => {
     mkdirSync(join(aDir, m.id, 'original'))
     writeFileSync(join(aDir, m.id, 'original', 'me-source-hash.m4a'), 'retained full-quality voice')
     writeFileSync(join(aDir, m.id, 'them.live.f32'), 'a scratch copy')
+    mkdirSync(join(aDir, m.id, 'slides'))
+    writeFileSync(join(aDir, m.id, 'slides', 'slide-000001000.jpg'), 'a slide')
+    writeFileSync(join(aDir, m.id, 'slides', 'slide-000002000.jpg.part'), 'half a slide')
     const out = join(tmp(), 'Yogurt backup.zip')
     expect(await exportBackup({ db: a.db, meetingsDir: aDir, out, appVersion: '1.2.3', now: 42 })).toEqual({ meetings: 1 })
 
@@ -309,6 +312,9 @@ describe('backup file', { timeout: 60_000 }, () => {
     expect(b.meeting(m.id)?.title).toBe('Weekly sync')
     expect(readFileSync(join(bDir, m.id, 'me.m4a'), 'utf8')).toBe('my voice')
     expect(readFileSync(join(bDir, m.id, 'original', 'me-source-hash.m4a'), 'utf8')).toBe('retained full-quality voice')
+    // slides travel with the meeting's folder; a slide still being written stays out
+    expect(readFileSync(join(bDir, m.id, 'slides', 'slide-000001000.jpg'), 'utf8')).toBe('a slide')
+    expect(existsSync(join(bDir, m.id, 'slides', 'slide-000002000.jpg.part'))).toBe(false)
     expect(await importBackup({ db: b.db, meetingsDir: bDir, zip: out })).toEqual({ ok: true, added: 0, skipped: 1 })
   })
 
