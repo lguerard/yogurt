@@ -86,6 +86,8 @@ const appOf = (bundleId: string) => {
   const id = Object.entries(HELPERS).find(([helper]) => bundleId === helper || bundleId.startsWith(helper + '.'))?.[1] ?? bundleId
   return APPS.find((a) => id === a.id || id.startsWith(a.id + '.'))
 }
+/** The call apps that are programs of their own, not browsers: their ids and names (slides look for their windows on Linux) */
+export const windowedCallApps = (): Array<{ id: string; name: string }> => APPS.filter((a) => !a.browser).map(({ id, name }) => ({ id, name }))
 /** Candidate owner to check with NSRunningApplication, never inferred from a process name. */
 export const callAppId = (bundleId: string): string | null => appOf(bundleId)?.id ?? null
 const micApp = (bundleId: string, runningApps: readonly string[] = []) => {

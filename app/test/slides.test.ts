@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { mkdtempSync, readdirSync, rmSync, writeFileSync, mkdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { difference, GRID, isNewSlide, placeSlides, signature, slideFileName, slidesIn } from '../src/shared/slides'
+import { appWindowName, appWindowsOf, cropFor, difference, displayFor, electronXid, GRID, isNewSlide, physicalBounds, placeSlides, screenFor, screenSize, signature, slideFileName, slidesIn, xidOf, xwinId, type DisplayArea } from '../src/shared/slides'
 import { slideHref, toMarkdownFile, transcriptMarkdown } from '../src/shared/exportNotes'
 import { docToMd } from '../src/shared/markdown'
 import { transcriptDoc } from '../src/shared/exportNotes'
@@ -180,5 +180,68 @@ describe('createSlides', () => {
     await s.settled()
     expect(listSlides(join(dir, 'm')).map((x) => [x.ms, x.path])).toEqual([[0, join(dir, 'm', 'slides', slideFileName(0))], [500, join(dir, 'm', 'slides', slideFileName(500))]])
     expect(listSlides(join(dir, 'none'))).toEqual([])
+  })
+})
+
+describe('a call window Electron does not list (Linux)', () => {
+  // two monitors side by side, X11 pixels; Zoom's "Meeting" window as the user's KDE had it
+  const left: DisplayArea = { id: 11, bounds: { x: 0, y: 0, width: 2560, height: 1440 }, scaleFactor: 1 }
+  const right: DisplayArea = { id: 22, bounds: { x: 2560, y: 0, width: 1920, height: 1080 }, scaleFactor: 1 }
+  const meeting = { x: 3156, y: 261, width: 1188, height: 761 }
+
+  it('reads the helper\'s windows and skips malformed ones', () => {
+    expect(appWindowsOf([{ id: 144704238, app: 'zoom', title: 'Meeting', x: 3156, y: 261, w: 1188, h: 761 }, { id: 'x' }, null, { id: 5, app: 'zoom', x: 0, y: 0, w: 0, h: 10 }, { id: 6, app: 'zoom', x: -5, y: 0, w: 300, h: 200 }]))
+      .toEqual([{ id: 144704238, app: 'zoom', title: 'Meeting', x: 3156, y: 261, w: 1188, h: 761 }, { id: 6, app: 'zoom', title: '', x: -5, y: 0, w: 300, h: 200 }])
+    expect(appWindowsOf({ error: 'no' })).toEqual([])
+  })
+  it('names it after its app, and tells its ids from Electron\'s', () => {
+    expect(appWindowName('Zoom', ' Meeting ')).toBe('Zoom – Meeting')
+    expect(appWindowName('Zoom', '')).toBe('Zoom')
+    expect(xidOf(xwinId(144704238))).toBe(144704238)
+    expect(xidOf('window:144704238:0')).toBeNull()
+    expect(electronXid('window:144704238:0')).toBe(144704238)
+    expect(electronXid('screen:0:0')).toBeNull()
+    expect(electronXid('xwin:5')).toBeNull()
+  })
+  it('finds the display holding the window\'s centre, else the one it overlaps most', () => {
+    expect(displayFor(meeting, [left, right])).toBe(right)
+    // centre off every screen (below the right one), still mostly on it
+    expect(displayFor({ x: 2600, y: 800, width: 1000, height: 600 }, [left, right])).toBe(right)
+    expect(displayFor({ x: 9000, y: 0, width: 100, height: 100 }, [left, right])).toBeNull()
+  })
+  it('cuts the window out of its own display\'s picture', () => {
+    const at = screenFor(meeting, [left, right], [{ id: 'screen:1:0', display_id: '11' }, { id: 'screen:2:0', display_id: '22' }])
+    expect(at).toEqual({ source: 'screen:2:0', area: { x: 2560, y: 0, width: 1920, height: 1080 } })
+    expect(cropFor(meeting, at!.area, { width: 1920, height: 1080 })).toEqual({ x: 596, y: 261, width: 1188, height: 761 })
+    // a smaller picture (the picker's thumbnail): the same part, scaled
+    expect(cropFor(meeting, at!.area, { width: 320, height: 180 })).toEqual({ x: 99, y: 44, width: 198, height: 126 })
+  })
+  it('cuts it out of X11\'s one picture of every display', () => {
+    const at = screenFor(meeting, [left, right], [{ id: 'screen:0:0', display_id: '' }])
+    expect(at).toEqual({ source: 'screen:0:0', area: { x: 0, y: 0, width: 4480, height: 1440 } })
+    expect(cropFor(meeting, at!.area, { width: 4480, height: 1440 })).toEqual({ x: 3156, y: 261, width: 1188, height: 761 })
+    expect(screenSize([left, right])).toEqual({ x: 0, y: 0, width: 4480, height: 1440 })
+  })
+  it('falls back to the screens\' order, and gives up when nothing says', () => {
+    expect(screenFor(meeting, [left, right], [{ id: 'a', display_id: '' }, { id: 'b', display_id: '' }])?.source).toBe('b')
+    expect(screenFor(meeting, [left, right], [{ id: 'a', display_id: '' }, { id: 'b', display_id: '' }, { id: 'c', display_id: '' }])).toBeNull()
+    expect(screenFor(meeting, [left, right], [])).toBeNull()
+  })
+  it('clamps a window partly off its screen, and skips one that barely shows', () => {
+    const area = physicalBounds(right)
+    // hanging off the right edge and the top
+    expect(cropFor({ x: 4000, y: -100, width: 800, height: 500 }, area, { width: 1920, height: 1080 })).toEqual({ x: 1440, y: 0, width: 480, height: 400 })
+    expect(cropFor({ x: 4470, y: 0, width: 800, height: 500 }, area, { width: 1920, height: 1080 })).toBeNull()
+    expect(cropFor({ x: 0, y: 0, width: 800, height: 500 }, area, { width: 1920, height: 1080 })).toBeNull()
+  })
+  it('scales DIP bounds to X11 pixels (scale factor 2)', () => {
+    const hiLeft: DisplayArea = { id: 1, bounds: { x: 0, y: 0, width: 1280, height: 720 }, scaleFactor: 2 }
+    const hiRight: DisplayArea = { id: 2, bounds: { x: 1280, y: 0, width: 1280, height: 720 }, scaleFactor: 2 }
+    expect(physicalBounds(hiRight)).toEqual({ x: 2560, y: 0, width: 2560, height: 1440 })
+    const at = screenFor(meeting, [hiLeft, hiRight], [{ id: 's1', display_id: '1' }, { id: 's2', display_id: '2' }])
+    expect(at).toEqual({ source: 's2', area: { x: 2560, y: 0, width: 2560, height: 1440 } })
+    expect(cropFor(meeting, at!.area, { width: 2560, height: 1440 })).toEqual({ x: 596, y: 261, width: 1188, height: 761 })
+    // the picture came out at DIP size: the cut is halved
+    expect(cropFor(meeting, at!.area, { width: 1280, height: 720 })).toEqual({ x: 298, y: 131, width: 594, height: 380 })
   })
 })

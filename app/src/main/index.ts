@@ -28,7 +28,7 @@ import { pathToFileURL } from 'node:url'
 import { isFake, modelsFolder, userDataDir } from './paths'
 import { logToFile } from './log'
 import { includesRecordingCredit, loadSettings, localeOf, keepsRecording, recordingReminderOn, spokenSetting, stopsWhenCallEnds, updateSettings, visibilityOf, summaryLanguageSetting } from './settings'
-import { CALL_GONE_MS, micPids, useCallApps, watchEveryMs, type MicApp } from './detect'
+import { CALL_GONE_MS, micPids, useCallApps, watchEveryMs, windowedCallApps, type MicApp } from './detect'
 import { systemLocale } from './locale'
 import { language as uiLanguage, onLanguage, setLanguage, t } from '../shared/i18n'
 import bundledCatalog from '../../../catalog/catalog.json'
@@ -940,6 +940,12 @@ app.whenReady().then(() => {
     time: () => { const c = activeCapture(); if (c) slideMs = c.endMs; return slideMs },
     // the Mac's Screen Recording list is the pane call audio uses too
     openSettings: () => { if (isFake()) systemSettings.push(SETTINGS_URL.systemAudio); else void shell.openExternal(SETTINGS_URL.systemAudio) },
+    // Linux: a call's window Electron does not list (Zoom's on KDE), from yogurt-system
+    ...(process.platform === 'linux' && !isFake() ? { callWindows: {
+      ids: windowedCallApps().map((a) => a.id),
+      nameOf: (appId: string) => windowedCallApps().find((a) => a.id === appId)?.name ?? appId,
+      read: (ids: string[]) => runHelper(['app-windows', ...ids]),
+    } } : {}),
   })
   onMeetingStart(() => { slideMs = 0 })
   onMeetingStop((m) => slides.stop(m.id))

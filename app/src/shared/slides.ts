@@ -93,3 +93,101 @@ export function isNewSlide(p: { saved: Uint8Array | null; previous: Uint8Array |
   if (difference(p.current, p.saved) <= threshold) return false
   return !!p.previous && difference(p.current, p.previous) <= threshold
 }
+
+// ---------- Linux: a call window Electron does not list, cut out of its screen ----------
+
+/** x, y, width, height; in physical pixels unless said otherwise */
+export type Rect = { x: number; y: number; width: number; height: number }
+/** A display as Electron's screen gives it: bounds in DIP, and the scale to physical pixels */
+export type DisplayArea = { id: number; bounds: Rect; scaleFactor: number }
+/** A screen picture source from desktopCapturer: its id and the display it shows ('' when Electron did not say) */
+export type ScreenPick = { id: string; display_id: string }
+
+/** The id slides give a window found by yogurt-system app-windows (main/slidesIpc.ts), not Electron's own "window:…" */
+export const XWIN = 'xwin:'
+export const xwinId = (xid: number): string => `${XWIN}${xid}`
+export const xidOf = (id: string): number | null => {
+  const m = /^xwin:(\d{1,10})$/.exec(id)
+  return m ? Number(m[1]) : null
+}
+/** The X window id in Electron's id of a window on Linux ("window:<xid>:0"); null for anything else */
+export const electronXid = (id: string): number | null => {
+  const m = /^window:(\d{1,10}):/.exec(id)
+  return m ? Number(m[1]) : null
+}
+
+/** A display's place on the X screen, in physical pixels: X11 counts pixels, Electron's bounds are DIP */
+export const physicalBounds = (d: DisplayArea): Rect => {
+  const s = d.scaleFactor > 0 ? d.scaleFactor : 1
+  return { x: Math.round(d.bounds.x * s), y: Math.round(d.bounds.y * s), width: Math.round(d.bounds.width * s), height: Math.round(d.bounds.height * s) }
+}
+
+const overlap = (a: Rect, b: Rect): number =>
+  Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y))
+const holds = (r: Rect, x: number, y: number) => x >= r.x && x < r.x + r.width && y >= r.y && y < r.y + r.height
+const union = (rs: Rect[]): Rect => {
+  const x = Math.min(...rs.map((r) => r.x)), y = Math.min(...rs.map((r) => r.y))
+  return { x, y, width: Math.max(...rs.map((r) => r.x + r.width)) - x, height: Math.max(...rs.map((r) => r.y + r.height)) - y }
+}
+
+/** The X screen every display is part of, in physical pixels */
+export const screenSize = (displays: DisplayArea[]): Rect => (displays.length ? union(displays.map(physicalBounds)) : { x: 0, y: 0, width: 0, height: 0 })
+
+/** The display a window is on: the one holding its centre, else the one it overlaps most; null when it is on none */
+export function displayFor(win: Rect, displays: DisplayArea[]): DisplayArea | null {
+  const cx = win.x + win.width / 2, cy = win.y + win.height / 2
+  const centre = displays.find((d) => holds(physicalBounds(d), cx, cy))
+  if (centre) return centre
+  let best: DisplayArea | null = null, most = 0
+  for (const d of displays) { const o = overlap(win, physicalBounds(d)); if (o > most) { most = o; best = d } }
+  return best
+}
+
+/**
+ * Which screen picture shows a window, and the part of the X screen that picture covers. The screen whose display_id
+ * is the window's display; else one picture of every display at once (X11's "Entire screen"); else, as many pictures as
+ * displays, the one in the same place. null: no picture can be told to show it.
+ */
+export function screenFor(win: Rect, displays: DisplayArea[], screens: ScreenPick[]): { source: string; area: Rect } | null {
+  const d = displayFor(win, displays)
+  if (!d || !screens.length) return null
+  const own = screens.find((s) => s.display_id !== '' && s.display_id === String(d.id))
+  if (own) return { source: own.id, area: physicalBounds(d) }
+  if (screens.length === 1) return { source: screens[0].id, area: union(displays.map(physicalBounds)) }
+  if (screens.length === displays.length) return { source: screens[displays.indexOf(d)].id, area: physicalBounds(d) }
+  return null
+}
+
+/** Too little of the window shows to make a slide of (it is almost all off the screen) */
+const MIN_CROP = 16
+
+/**
+ * The window's part of a picture of `area` (the X screen's pixels it covers) that came out `picture` big: cut to the
+ * picture, scaled when the picture is smaller than the area. null when too little of the window is in it.
+ */
+export function cropFor(win: Rect, area: Rect, picture: { width: number; height: number }): Rect | null {
+  if (area.width <= 0 || area.height <= 0 || picture.width <= 0 || picture.height <= 0) return null
+  const sx = picture.width / area.width, sy = picture.height / area.height
+  const left = Math.max(0, Math.round((win.x - area.x) * sx)), top = Math.max(0, Math.round((win.y - area.y) * sy))
+  const right = Math.min(picture.width, Math.round((win.x + win.width - area.x) * sx))
+  const bottom = Math.min(picture.height, Math.round((win.y + win.height - area.y) * sy))
+  if (right - left < MIN_CROP || bottom - top < MIN_CROP) return null
+  return { x: left, y: top, width: right - left, height: bottom - top }
+}
+
+/** A call app's window as yogurt-system app-windows prints it: its X id, the app id it matched, its place on the X screen */
+export type AppWindow = { id: number; app: string; title: string; x: number; y: number; w: number; h: number }
+const isInt = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v)
+/** The helper's answer, keeping only well-formed windows */
+export function appWindowsOf(raw: unknown): AppWindow[] {
+  if (!Array.isArray(raw)) return []
+  return raw.flatMap((w): AppWindow[] => {
+    if (!w || typeof w !== 'object') return []
+    const { id, app, title, x, y, w: width, h } = w as Record<string, unknown>
+    if (!isInt(id) || id <= 0 || typeof app !== 'string' || !isInt(x) || !isInt(y) || !isInt(width) || !isInt(h) || width <= 0 || h <= 0) return []
+    return [{ id, app, title: typeof title === 'string' ? title : '', x, y, w: width, h }]
+  })
+}
+export const rectOf = (w: AppWindow): Rect => ({ x: w.x, y: w.y, width: w.w, height: w.h })
+/** "Zoom – Meeting": the app's name first, since a call window's title alone can be anonymous */
+export const appWindowName = (app: string, title: string): string => (title.trim() ? `${app} – ${title.trim()}` : app)
