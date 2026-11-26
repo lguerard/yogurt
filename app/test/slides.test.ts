@@ -1,5 +1,9 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { mkdtempSync, readdirSync, rmSync, writeFileSync, mkdirSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { difference, GRID, isNewSlide, signature, slideFileName, slidesIn } from '../src/shared/slides'
+import { createSlides, listSlides, type SlideImage } from '../src/main/slides'
 
 /** a w×h BGRA picture: white with a black band from row top to row bottom (fractions of the height) */
 function picture(w: number, h: number, bands: Array<[number, number]> = [], cols: [number, number] = [0, 1]): Uint8Array {
@@ -50,5 +54,90 @@ describe('slide files', () => {
     expect(slideFileName(1234.6)).toBe('slide-000001235.jpg')
     expect(slidesIn(['slide-000090000.jpg', 'notes.txt', 'slide-000001000.jpg', 'slide-000002000.jpg.part', 'slide-5.png']))
       .toEqual([{ file: 'slide-5.png', ms: 5 }, { file: 'slide-000001000.jpg', ms: 1000 }, { file: 'slide-000090000.jpg', ms: 90000 }])
+  })
+})
+
+describe('createSlides', () => {
+  let dir: string
+  let shown: Uint8Array
+  let gone = false
+  let now = 0
+  let paused = false
+  const views: unknown[] = []
+  let tick: (() => void) | undefined
+  const image = (): SlideImage => {
+    const px = shown
+    const img: SlideImage = {
+      isEmpty: () => false, getSize: () => ({ width: 192, height: 108 }), resize: () => img,
+      toBitmap: () => Buffer.from(px), toJPEG: () => Buffer.from('jpeg'),
+    }
+    return img
+  }
+  const make = () => createSlides({
+    dirOf: (id) => join(dir, id), grab: async () => (gone ? null : image()), time: () => now, paused: () => paused,
+    send: (v) => views.push(v), setInterval: (fn) => { tick = fn; return 1 }, clearInterval: () => { tick = undefined },
+  })
+  const files = () => { try { return readdirSync(join(dir, 'm', 'slides')).sort() } catch { return [] } }
+  beforeEach(() => { dir = mkdtempSync(join(tmpdir(), 'yogurt-slides-')); shown = picture(192, 108, [[0.1, 0.2]]); gone = false; now = 0; paused = false; views.length = 0 })
+  afterEach(() => rmSync(dir, { recursive: true, force: true }))
+
+  it('keeps the first picture, then only new slides once they settle, at the moment they first showed', async () => {
+    const s = make()
+    now = 1000
+    s.start('m', 'screen:1', 'Screen')
+    await s.settled()
+    expect(files()).toEqual(['slide-000001000.jpg'])
+    now = 5000; tick!(); await s.settled()
+    expect(files()).toHaveLength(1)
+    shown = picture(192, 108, [[0.5, 0.9]])
+    now = 9000; tick!(); await s.settled()
+    expect(files()).toHaveLength(1)
+    now = 13_000; tick!(); await s.settled()
+    expect(files()).toEqual(['slide-000001000.jpg', 'slide-000009000.jpg'])
+    expect(s.view()).toMatchObject({ meetingId: 'm', sourceId: 'screen:1', count: 2 })
+    expect(readdirSync(join(dir, 'm', 'slides')).some((f) => f.endsWith('.part'))).toBe(false)
+  })
+
+  it('takes one on request whatever it shows, even while paused, and nothing by timer while paused', async () => {
+    const s = make()
+    s.start('m', 'window:1', 'Deck')
+    await s.settled()
+    paused = true
+    shown = picture(192, 108, [[0.5, 0.9]])
+    tick!(); await s.settled(); tick!(); await s.settled()
+    expect(files()).toHaveLength(1)
+    now = 2000
+    expect(await s.captureNow()).toBe(true)
+    expect(await s.captureNow()).toBe(true)
+    expect(files()).toEqual(['slide-000000000.jpg', 'slide-000002000.jpg', 'slide-000002001.jpg'])
+  })
+
+  it('says when the source has gone, and stops for good on stop', async () => {
+    const s = make()
+    s.start('m', 'window:1', 'Deck')
+    await s.settled()
+    gone = true
+    tick!(); await s.settled()
+    expect(s.view()?.problem).toBeUndefined()
+    tick!(); await s.settled()
+    expect(s.view()?.problem).toBe('gone')
+    s.stop('other')
+    expect(s.view()).not.toBeNull()
+    s.stop('m')
+    expect(s.view()).toBeNull()
+    expect(views.at(-1)).toBeNull()
+    expect(tick).toBeUndefined()
+    expect(await s.captureNow()).toBe(false)
+  })
+
+  it('counts the slides a resumed meeting already has, and lists them with their paths', async () => {
+    mkdirSync(join(dir, 'm', 'slides'), { recursive: true })
+    writeFileSync(join(dir, 'm', 'slides', slideFileName(500)), 'x')
+    const s = make()
+    s.start('m', 'screen:1', 'Screen')
+    expect(s.view()?.count).toBe(1)
+    await s.settled()
+    expect(listSlides(join(dir, 'm')).map((x) => [x.ms, x.path])).toEqual([[0, join(dir, 'm', 'slides', slideFileName(0))], [500, join(dir, 'm', 'slides', slideFileName(500))]])
+    expect(listSlides(join(dir, 'none'))).toEqual([])
   })
 })
