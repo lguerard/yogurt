@@ -760,5 +760,15 @@
   "Unmute my mic in Yogurt": "Aktifkan mikrofon saya di Yogurt",
   "Mic will stay off on resume": "Mikrofon akan tetap nonaktif saat perekaman dilanjutkan",
   "Mic mute couldn’t be confirmed.": "Status bisu mikrofon tidak dapat dipastikan.",
-  "Mic off. Yogurt can’t hear call audio.": "Mikrofon nonaktif. Yogurt tidak dapat mendengar audio panggilan."
+  "Mic off. Yogurt can’t hear call audio.": "Mikrofon nonaktif. Yogurt tidak dapat mendengar audio panggilan.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Izinkan Yogurt merekam layar Anda di Pengaturan Sistem, lalu buka kembali Yogurt untuk mengambil slide.",
+  "Capture slide now": "Ambil slide sekarang",
+  "Couldn't capture slides": "Tidak dapat mengambil slide",
+  "No screens or windows found": "Tidak ada layar atau jendela yang ditemukan",
+  "Screens": "Layar",
+  "Slides": "Slide",
+  "Slides from {name}": "Slide dari {name}",
+  "Stop capturing slides": "Berhenti mengambil slide",
+  "The screen or window is no longer available.": "Layar atau jendela tidak lagi tersedia.",
+  "Windows": "Jendela"
 }

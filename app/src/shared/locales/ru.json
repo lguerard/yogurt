@@ -830,5 +830,15 @@
   "Unmute my mic in Yogurt": "Включить мой микрофон в Yogurt",
   "Mic will stay off on resume": "При возобновлении записи микрофон останется выключенным",
   "Mic mute couldn’t be confirmed.": "Не удалось подтвердить отключение микрофона.",
-  "Mic off. Yogurt can’t hear call audio.": "Микрофон выключен. Yogurt не слышит звук звонка."
+  "Mic off. Yogurt can’t hear call audio.": "Микрофон выключен. Yogurt не слышит звук звонка.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Разрешите Yogurt записывать экран в Системных настройках, затем снова откройте Yogurt, чтобы сохранять слайды.",
+  "Capture slide now": "Сохранить слайд сейчас",
+  "Couldn't capture slides": "Не удалось сохранить слайды",
+  "No screens or windows found": "Экраны и окна не найдены",
+  "Screens": "Экраны",
+  "Slides": "Слайды",
+  "Slides from {name}": "Слайды: {name}",
+  "Stop capturing slides": "Прекратить сохранять слайды",
+  "The screen or window is no longer available.": "Экран или окно больше недоступны.",
+  "Windows": "Окна"
 }

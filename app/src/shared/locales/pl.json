@@ -838,5 +838,15 @@
   "Unmute my mic in Yogurt": "Włącz mój mikrofon w Yogurt",
   "Mic will stay off on resume": "Po wznowieniu mikrofon pozostanie wyciszony",
   "Mic mute couldn’t be confirmed.": "Nie udało się potwierdzić wyciszenia mikrofonu.",
-  "Mic off. Yogurt can’t hear call audio.": "Mikrofon wyciszony. Yogurt nie odbiera dźwięku rozmowy."
+  "Mic off. Yogurt can’t hear call audio.": "Mikrofon wyciszony. Yogurt nie odbiera dźwięku rozmowy.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Zezwól Yogurtowi na nagrywanie ekranu w Ustawieniach systemowych, a potem otwórz Yogurt ponownie, aby przechwytywać slajdy.",
+  "Capture slide now": "Przechwyć slajd teraz",
+  "Couldn't capture slides": "Nie udało się przechwycić slajdów",
+  "No screens or windows found": "Nie znaleziono ekranów ani okien",
+  "Screens": "Ekrany",
+  "Slides": "Slajdy",
+  "Slides from {name}": "Slajdy z: {name}",
+  "Stop capturing slides": "Zatrzymaj przechwytywanie slajdów",
+  "The screen or window is no longer available.": "Ekran lub okno nie jest już dostępne.",
+  "Windows": "Okna"
 }

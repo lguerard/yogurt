@@ -790,5 +790,15 @@
   "Unmute my mic in Yogurt": "Yogurt’ta mikrofonumu aç",
   "Mic will stay off on resume": "Kayıt devam ettiğinde mikrofon kapalı kalacak",
   "Mic mute couldn’t be confirmed.": "Mikrofonun sessize alındığı doğrulanamadı.",
-  "Mic off. Yogurt can’t hear call audio.": "Mikrofon kapalı. Yogurt aramanın sesini alamıyor."
+  "Mic off. Yogurt can’t hear call audio.": "Mikrofon kapalı. Yogurt aramanın sesini alamıyor.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Sistem Ayarları’nda Yogurt’ün ekranınızı kaydetmesine izin verin, ardından slayt yakalamak için Yogurt’ü yeniden açın.",
+  "Capture slide now": "Slaytı şimdi yakala",
+  "Couldn't capture slides": "Slaytlar yakalanamadı",
+  "No screens or windows found": "Ekran veya pencere bulunamadı",
+  "Screens": "Ekranlar",
+  "Slides": "Slaytlar",
+  "Slides from {name}": "{name} slaytları",
+  "Stop capturing slides": "Slayt yakalamayı durdur",
+  "The screen or window is no longer available.": "Ekran veya pencere artık kullanılamıyor.",
+  "Windows": "Pencereler"
 }

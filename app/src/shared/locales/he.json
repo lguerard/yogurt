@@ -812,5 +812,15 @@
   "Unmute my mic in Yogurt": "ביטול השתקת המיקרופון שלי ב־Yogurt",
   "Mic will stay off on resume": "המיקרופון יישאר מושתק כשההקלטה תתחדש",
   "Mic mute couldn’t be confirmed.": "לא ניתן היה לאשר שהמיקרופון הושתק.",
-  "Mic off. Yogurt can’t hear call audio.": "המיקרופון מושתק. Yogurt לא קולט את שמע השיחה."
+  "Mic off. Yogurt can’t hear call audio.": "המיקרופון מושתק. Yogurt לא קולט את שמע השיחה.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "יש לאפשר ל-Yogurt להקליט את המסך בהגדרות המערכת, ואז לפתוח מחדש את Yogurt כדי לצלם שקפים.",
+  "Capture slide now": "צילום שקף עכשיו",
+  "Couldn't capture slides": "לא ניתן היה לצלם שקפים",
+  "No screens or windows found": "לא נמצאו מסכים או חלונות",
+  "Screens": "מסכים",
+  "Slides": "שקפים",
+  "Slides from {name}": "שקפים מ-{name}",
+  "Stop capturing slides": "הפסקת צילום השקפים",
+  "The screen or window is no longer available.": "המסך או החלון כבר לא זמינים.",
+  "Windows": "חלונות"
 }
