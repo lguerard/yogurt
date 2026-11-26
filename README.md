@@ -39,6 +39,7 @@ brew install --cask frigadehq/yogurt/yogurt
 - **Answers with sources.** Yogurt answers questions across meetings and links to the source.
 - **Folders and search.** You can find meetings by folder, title, notes or transcript.
 - **Copy and export.** You can copy notes or transcripts, or save both as Markdown.
+- **Slides.** While recording, Yogurt can capture a screen or window each time a new slide appears, and the Markdown export puts each slide in the transcript where it was shown.
 - **Local MCP server.** When you turn this on, apps on your computer can read your notes, transcripts, saved audio and each meeting's calendar details (attendees' names and emails).
 - **Automatic stop.** By default, Yogurt stops recording when it detects that your call has ended. A recording you start yourself with New note asks first instead, since it may not be a call.
 
