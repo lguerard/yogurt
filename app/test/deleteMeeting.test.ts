@@ -130,3 +130,14 @@ describe('isId', () => {
     for (const bad of ['', '..', 'a/b', 'a b', 'x'.repeat(65), 1, null, undefined, {}]) expect(isId(bad)).toBe(false)
   })
 })
+
+describe('deleting a meeting with slides', () => {
+  it('removes its slides with its folder', async () => {
+    const s = setup()
+    const m = s.make('done')
+    mkdirSync(join(s.meetings, m.id, 'slides'))
+    writeFileSync(join(s.meetings, m.id, 'slides', 'slide-000001000.jpg'), 'slide')
+    expect(await deleteMeeting(m.id, s.deps)).toBe('deleted')
+    expect(existsSync(join(s.meetings, m.id, 'slides'))).toBe(false)
+  })
+})

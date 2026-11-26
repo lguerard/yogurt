@@ -9,11 +9,11 @@ use pulse::context::introspect::{SourceInfo, SourceOutputInfo};
 use pulse::context::{Context, FlagSet, State};
 use pulse::mainloop::standard::{IterateResult, Mainloop};
 use std::cell::RefCell;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 use std::time::Duration;
 use x11rb::connection::Connection;
-use x11rb::protocol::xproto::{Atom, AtomEnum, ConnectionExt, Window};
+use x11rb::protocol::xproto::{Atom, AtomEnum, ConnectionExt, MapState, Window, WindowClass};
 
 /** Monitor sources (a speaker's sound) and every recording stream, from the sound server */
 fn pulse_streams() -> Result<(HashSet<u32>, Vec<Stream>), String> {
@@ -158,4 +158,61 @@ pub fn window_title(id: &str) -> Option<String> {
         })
         .collect();
     parse::pick_window(&found, active.map(|w| w as u64))
+}
+
+/**
+ * The call apps' windows big enough to take slides of, shown on screen, with where they are (root coordinates). The
+ * window manager's list first; then the screen's own top-level windows, since a window the manager left alone is not
+ * on that list: KDE does not frame Zoom's call window ("Meeting", _KDE_NET_WM_WINDOW_TYPE_OVERRIDE), and Electron's
+ * own window list skips it. A window matches by its process (_NET_WM_PID, as browser-title) or else its WM_CLASS.
+ */
+pub fn app_windows(ids: &[String]) -> Vec<parse::AppWindow> {
+    let Ok((conn, screen)) = x11rb::connect(None) else { return Vec::new() };
+    let Some(root) = conn.setup().roots.get(screen).map(|s| s.root) else { return Vec::new() };
+    let (Some(net_pid), Some(net_name), Some(utf8)) = (atom(&conn, b"_NET_WM_PID"), atom(&conn, b"_NET_WM_NAME"), atom(&conn, b"UTF8_STRING")) else {
+        return Vec::new();
+    };
+    let managed = [b"_NET_CLIENT_LIST_STACKING".as_slice(), b"_NET_CLIENT_LIST".as_slice()]
+        .iter()
+        .filter_map(|name| atom(&conn, name))
+        .map(|a| prop32(&conn, root, a, AtomEnum::WINDOW))
+        .find(|l| !l.is_empty())
+        .unwrap_or_default();
+    let top: Vec<Window> = conn.query_tree(root).ok().and_then(|c| c.reply().ok()).map(|r| r.children).unwrap_or_default();
+    let managed_set: HashSet<Window> = managed.iter().copied().collect();
+    let mut names: HashMap<u32, Vec<String>> = HashMap::new();
+    let mut found = Vec::new();
+    for w in parse::unique_windows(&[managed, top]) {
+        let Some(attrs) = conn.get_window_attributes(w).ok().and_then(|c| c.reply().ok()) else { continue };
+        if attrs.map_state != MapState::VIEWABLE || attrs.class == WindowClass::INPUT_ONLY {
+            continue;
+        }
+        let Some(geo) = conn.get_geometry(w).ok().and_then(|c| c.reply().ok()) else { continue };
+        if !parse::big_enough(geo.width.into(), geo.height.into()) {
+            continue;
+        }
+        let pid = prop32(&conn, w, net_pid, AtomEnum::CARDINAL).first().copied().unwrap_or(0);
+        let by_pid = (pid != 0)
+            .then(|| {
+                let of = names.entry(pid).or_insert_with(|| names_of(pid));
+                ids.iter().find(|id| of.contains(id)).cloned()
+            })
+            .flatten();
+        let app = by_pid.or_else(|| {
+            let class = conn.get_property(false, w, AtomEnum::WM_CLASS, AtomEnum::STRING, 0, 256).ok()?.reply().ok()?;
+            parse::wm_class_app(&class.value, ids).cloned()
+        });
+        let Some(app) = app else { continue };
+        // a top-level window the manager did not list can be its frame around a client it did list: that client is the window
+        if !managed_set.contains(&w) {
+            let children = conn.query_tree(w).ok().and_then(|c| c.reply().ok()).map(|r| r.children).unwrap_or_default();
+            if children.iter().any(|c| managed_set.contains(c)) {
+                continue;
+            }
+        }
+        let Some(at) = conn.translate_coordinates(w, root, 0, 0).ok().and_then(|c| c.reply().ok()) else { continue };
+        let title = prop_text(&conn, w, net_name, utf8).or_else(|| prop_text(&conn, w, AtomEnum::WM_NAME.into(), AtomEnum::STRING)).unwrap_or_default();
+        found.push(parse::AppWindow { id: w as u64, app, title, x: at.dst_x.into(), y: at.dst_y.into(), w: geo.width.into(), h: geo.height.into() });
+    }
+    found
 }

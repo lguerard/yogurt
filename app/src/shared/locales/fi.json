@@ -808,5 +808,15 @@
   "Unmute my mic in Yogurt": "Poista mikrofonini mykistys Yogurtissa",
   "Mic will stay off on resume": "Mikrofoni pysyy mykistettynä, kun tallennusta jatketaan",
   "Mic mute couldn’t be confirmed.": "Mikrofonin mykistystä ei voitu vahvistaa.",
-  "Mic off. Yogurt can’t hear call audio.": "Mikrofoni on mykistetty. Yogurt ei kuule puhelun ääntä."
+  "Mic off. Yogurt can’t hear call audio.": "Mikrofoni on mykistetty. Yogurt ei kuule puhelun ääntä.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Salli Yogurtin tallentaa näyttöäsi Järjestelmäasetuksissa ja avaa Yogurt sitten uudelleen tallentaaksesi dioja.",
+  "Capture slide now": "Tallenna dia nyt",
+  "Couldn't capture slides": "Dioja ei voitu tallentaa",
+  "No screens or windows found": "Näyttöjä tai ikkunoita ei löytynyt",
+  "Screens": "Näytöt",
+  "Slides": "Diat",
+  "Slides from {name}": "Diat lähteestä {name}",
+  "Stop capturing slides": "Lopeta diojen tallennus",
+  "The screen or window is no longer available.": "Näyttö tai ikkuna ei ole enää käytettävissä.",
+  "Windows": "Ikkunat"
 }

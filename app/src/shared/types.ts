@@ -1,3 +1,4 @@
+import type { SlideCaptureView, SlideSourcesView } from './slides'
 import type { CompanionStatus } from './companion'
 import type { MeterPacket } from './speechWave'
 import type { AudioUploadFile, AudioUploadStatus } from './audioUpload'
@@ -221,6 +222,20 @@ export type YogurtApi = {
     setMic(id: string | null): Promise<boolean>
     /** the mic in use changed while recording; fellBack: the chosen one went away and Auto took over */
     onMics(fn: (e: { fellBack: boolean }) => void): () => void
+  }
+  /** slides from a screen or window while a meeting records (main/slidesIpc.ts) */
+  slides: {
+    /** the screens and windows there are, with small pictures; denied: the Mac has not allowed Screen Recording */
+    sources(): Promise<SlideSourcesView>
+    /** takes slides of this source (from the last sources()) for the meeting being recorded */
+    start(meetingId: string, sourceId: string): Promise<boolean>
+    stop(): Promise<void>
+    /** keeps a slide now, whatever it shows */
+    capture(): Promise<boolean>
+    state(): Promise<SlideCaptureView | null>
+    onState(cb: (v: SlideCaptureView | null) => void): () => void
+    /** the Mac's Screen Recording settings */
+    openSettings(): Promise<void>
   }
   /** questions about one meeting, answered by the notes model from its transcript and notes */
   chat: {

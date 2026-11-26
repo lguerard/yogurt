@@ -5,6 +5,7 @@
 //!   running-apps ID...     the IDs that have a running process
 //!   browser-title ID       {"title": the app's front window title, or null}
 //!   call-watch MS ID...    one JSON line every MS with the call app's windows (yogurt-mac's call-watch)
+//!   app-windows ID...      [{"id","app","title","x","y","w","h"}] the apps' windows on screen, for slides (Linux; [] elsewhere)
 //!
 //! IDs are the program's file name: "zoom.exe" (lowercased) on Windows, "zoom" or a Flatpak app id on Linux.
 
@@ -33,7 +34,7 @@ use win as os;
 use serde_json::{json, Value};
 use std::io::Write;
 
-const USAGE: &str = "yogurt-system mic-apps | running-apps APP_ID... | browser-title APP_ID | call-watch MS APP_ID...";
+const USAGE: &str = "yogurt-system mic-apps | running-apps APP_ID... | browser-title APP_ID | call-watch MS APP_ID... | app-windows APP_ID...";
 
 fn out(v: Value) {
     let mut stdout = std::io::stdout().lock();
@@ -68,6 +69,13 @@ fn main() {
             wincalls::watch(every, &args[2..]);
             #[cfg(not(any(target_os = "linux", windows)))]
             fail(&format!("call-watch {every}: Linux and Windows only"))
+        }
+        Some("app-windows") => {
+            #[cfg(target_os = "linux")]
+            out(parse::app_windows_json(&linux::app_windows(&args[1..])));
+            // Windows lists every window through Electron already
+            #[cfg(not(target_os = "linux"))]
+            out(parse::app_windows_json(&[]));
         }
         _ => fail(USAGE),
     }

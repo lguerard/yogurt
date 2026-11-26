@@ -760,5 +760,15 @@
   "Unmute my mic in Yogurt": "เปิดไมค์ของฉันใน Yogurt",
   "Mic will stay off on resume": "ไมค์จะยังปิดอยู่เมื่อบันทึกต่อ",
   "Mic mute couldn’t be confirmed.": "ยืนยันไม่ได้ว่าปิดไมค์แล้ว",
-  "Mic off. Yogurt can’t hear call audio.": "ไมค์ปิดอยู่ Yogurt ไม่ได้ยินเสียงการโทร"
+  "Mic off. Yogurt can’t hear call audio.": "ไมค์ปิดอยู่ Yogurt ไม่ได้ยินเสียงการโทร",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "อนุญาตให้ Yogurt บันทึกหน้าจอของคุณในการตั้งค่าระบบ แล้วเปิด Yogurt อีกครั้งเพื่อจับภาพสไลด์",
+  "Capture slide now": "จับภาพสไลด์ตอนนี้",
+  "Couldn't capture slides": "ไม่สามารถจับภาพสไลด์ได้",
+  "No screens or windows found": "ไม่พบหน้าจอหรือหน้าต่าง",
+  "Screens": "หน้าจอ",
+  "Slides": "สไลด์",
+  "Slides from {name}": "สไลด์จาก {name}",
+  "Stop capturing slides": "หยุดจับภาพสไลด์",
+  "The screen or window is no longer available.": "หน้าจอหรือหน้าต่างไม่พร้อมใช้งานแล้ว",
+  "Windows": "หน้าต่าง"
 }

@@ -819,5 +819,15 @@
   "Unmute my mic in Yogurt": "Pornește-mi microfonul în Yogurt",
   "Mic will stay off on resume": "Microfonul va rămâne oprit la reluare",
   "Mic mute couldn’t be confirmed.": "Oprirea microfonului nu a putut fi confirmată.",
-  "Mic off. Yogurt can’t hear call audio.": "Microfon oprit. Yogurt nu poate auzi sunetul apelului."
+  "Mic off. Yogurt can’t hear call audio.": "Microfon oprit. Yogurt nu poate auzi sunetul apelului.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Permiteți Yogurt să înregistreze ecranul în Configurări sistem, apoi redeschideți Yogurt pentru a captura diapozitive.",
+  "Capture slide now": "Capturați diapozitivul acum",
+  "Couldn't capture slides": "Diapozitivele nu au putut fi capturate",
+  "No screens or windows found": "Nu s-au găsit ecrane sau ferestre",
+  "Screens": "Ecrane",
+  "Slides": "Diapozitive",
+  "Slides from {name}": "Diapozitive din {name}",
+  "Stop capturing slides": "Opriți capturarea diapozitivelor",
+  "The screen or window is no longer available.": "Ecranul sau fereastra nu mai este disponibilă.",
+  "Windows": "Ferestre"
 }

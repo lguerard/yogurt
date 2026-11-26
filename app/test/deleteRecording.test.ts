@@ -153,3 +153,13 @@ describe('deleting only a recording', () => {
     expect(existsSync(join(s.dir, 'me.m4a'))).toBe(false)
   })
 })
+
+describe('slides and Delete audio', () => {
+  it('keeps the slides: they are part of the notes, like the transcript, not the audio', async () => {
+    const s = setup()
+    mkdirSync(join(s.dir, 'slides'))
+    writeFileSync(join(s.dir, 'slides', 'slide-000001000.jpg'), 'slide')
+    expect(await s.remove()).toBe('deleted')
+    expect(readdirSync(join(s.dir, 'slides'))).toEqual(['slide-000001000.jpg'])
+  })
+})

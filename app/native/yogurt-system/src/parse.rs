@@ -212,6 +212,45 @@ pub fn uia_role(control_type: i32) -> &'static str {
     }
 }
 
+// ---- Linux: a call app's windows, for slides ----
+
+/** A call app's window and where it is on the X screen: root coordinates, in physical pixels */
+#[derive(Debug, Clone, PartialEq)]
+pub struct AppWindow {
+    pub id: u64,
+    /** the app id it matched (one of those asked for) */
+    pub app: String,
+    pub title: String,
+    pub x: i32,
+    pub y: i32,
+    pub w: u32,
+    pub h: u32,
+}
+
+/** Smaller than this is a toolbar or a hidden helper window (Zoom has a 594x78 one and a 1x1), never a call to take slides of */
+pub const MIN_WINDOW_W: u32 = 200;
+pub const MIN_WINDOW_H: u32 = 150;
+pub fn big_enough(w: u32, h: u32) -> bool {
+    w >= MIN_WINDOW_W && h >= MIN_WINDOW_H
+}
+
+/** The id among `ids` that WM_CLASS names (instance and class, each ending in NUL: "zoom\0zoom\0"), any case */
+pub fn wm_class_app<'a>(raw: &[u8], ids: &'a [String]) -> Option<&'a String> {
+    let parts: Vec<String> = raw.split(|b| *b == 0).filter(|p| !p.is_empty()).map(|p| String::from_utf8_lossy(p).to_lowercase()).collect();
+    ids.iter().find(|id| parts.iter().any(|p| *p == id.to_lowercase()))
+}
+
+/** Each window once, in the order first found (the window manager's list first, then the screen's own top-level windows) */
+pub fn unique_windows(lists: &[Vec<u32>]) -> Vec<u32> {
+    let mut seen = HashSet::new();
+    lists.iter().flatten().copied().filter(|w| *w != 0 && seen.insert(*w)).collect()
+}
+
+/** [{"id","app","title","x","y","w","h"}], as slides listing reads it (main/slidesIpc.ts) */
+pub fn app_windows_json(windows: &[AppWindow]) -> Value {
+    Value::Array(windows.iter().map(|w| json!({ "id": w.id, "app": w.app, "title": w.title, "x": w.x, "y": w.y, "w": w.w, "h": w.h })).collect())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -356,5 +395,38 @@ mod tests {
         assert_eq!(uia_role(50029), "table row");
         assert_eq!(uia_role(50008), "list");
         assert_eq!(uia_role(12345), "unknown");
+    }
+    #[test]
+    fn toolbars_and_hidden_windows_are_too_small() {
+        assert!(big_enough(1188, 761));
+        assert!(big_enough(200, 150));
+        assert!(!big_enough(594, 78));
+        assert!(!big_enough(1, 1));
+        assert!(!big_enough(199, 800));
+    }
+
+    #[test]
+    fn wm_class_names_the_app_in_any_case() {
+        let ids = vec!["us.zoom.Zoom".to_string(), "zoom".to_string(), "teams-for-linux".to_string()];
+        assert_eq!(wm_class_app(b"zoom\0zoom\0", &ids).map(String::as_str), Some("zoom"));
+        assert_eq!(wm_class_app(b"teams-for-linux\0Teams-for-linux\0", &ids).map(String::as_str), Some("teams-for-linux"));
+        assert_eq!(wm_class_app(b"Navigator\0firefox\0", &ids), None);
+        assert_eq!(wm_class_app(b"", &ids), None);
+    }
+
+    #[test]
+    fn windows_are_listed_once_in_the_order_found() {
+        assert_eq!(unique_windows(&[vec![3, 1], vec![0, 1, 2, 3, 4]]), vec![3, 1, 2, 4]);
+        assert!(unique_windows(&[]).is_empty());
+    }
+
+    #[test]
+    fn app_windows_json_has_the_keys_slides_read() {
+        let w = AppWindow { id: 0x8a002ee, app: "zoom".into(), title: "Meeting".into(), x: 3156, y: 261, w: 1188, h: 761 };
+        assert_eq!(
+            app_windows_json(&[w]).to_string(),
+            r#"[{"app":"zoom","h":761,"id":144704238,"title":"Meeting","w":1188,"x":3156,"y":261}]"#
+        );
+        assert_eq!(app_windows_json(&[]).to_string(), "[]");
     }
 }

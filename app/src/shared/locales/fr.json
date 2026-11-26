@@ -818,5 +818,15 @@
   "Unmute my mic in Yogurt": "Réactiver mon micro dans Yogurt",
   "Mic will stay off on resume": "Le micro restera coupé à la reprise",
   "Mic mute couldn’t be confirmed.": "Impossible de confirmer la coupure du micro.",
-  "Mic off. Yogurt can’t hear call audio.": "Micro coupé. Yogurt ne reçoit pas le son de l’appel."
+  "Mic off. Yogurt can’t hear call audio.": "Micro coupé. Yogurt ne reçoit pas le son de l’appel.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Autorisez Yogurt à enregistrer votre écran dans Réglages Système, puis rouvrez Yogurt pour capturer des diapositives.",
+  "Capture slide now": "Capturer la diapositive maintenant",
+  "Couldn't capture slides": "Impossible de capturer les diapositives",
+  "No screens or windows found": "Aucun écran ni aucune fenêtre trouvés",
+  "Screens": "Écrans",
+  "Slides": "Diapositives",
+  "Slides from {name}": "Diapositives de {name}",
+  "Stop capturing slides": "Arrêter la capture des diapositives",
+  "The screen or window is no longer available.": "L’écran ou la fenêtre n’est plus disponible.",
+  "Windows": "Fenêtres"
 }

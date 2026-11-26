@@ -308,5 +308,15 @@
   "Mute my mic": "Mute my mic",
   "Mic on in Yogurt": "Mic on in Yogurt",
   "Mic mute couldn’t be confirmed.": "Mic mute couldn’t be confirmed.",
-  "Mic off. Yogurt can’t hear call audio.": "Mic off. Yogurt can’t hear call audio."
+  "Mic off. Yogurt can’t hear call audio.": "Mic off. Yogurt can’t hear call audio.",
+  "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.": "Allow Yogurt to record your screen in System Settings, then reopen Yogurt to capture slides.",
+  "Capture slide now": "Capture slide now",
+  "Couldn't capture slides": "Couldn't capture slides",
+  "No screens or windows found": "No screens or windows found",
+  "Screens": "Screens",
+  "Slides": "Slides",
+  "Slides from {name}": "Slides from {name}",
+  "Stop capturing slides": "Stop capturing slides",
+  "The screen or window is no longer available.": "The screen or window is no longer available.",
+  "Windows": "Windows"
 }
