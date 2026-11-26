@@ -151,8 +151,12 @@ function readZoom(windows: AxWindow[]): CallReading {
     })
   }
   // The Linux view always says "Active Speaker" on the tile it is showing, even with one person in the call, so the
-  // mark is trusted only with three or more tiles (the same threshold the Mac mark has).
-  if (uniq(linuxTiles.map((t) => t.name)).length >= 3) for (const t of linuxTiles) if (t.talking) speaking.push(t.name)
+  // mark is trusted only with three or more tiles (the same threshold the Mac mark has). Its gallery view (Zoom 7.2.1,
+  // a call of 31) puts the mark on every tile it shows ("23 of 23"): marked tiles that keep scrolling into view were then
+  // the only ones left after the steady marks were dropped, and got lines they never said. More than one marked tile
+  // says nothing about who talks, so it reads as nobody.
+  const marked = uniq(linuxTiles.filter((t) => t.talking).map((t) => t.name))
+  if (uniq(linuxTiles.map((t) => t.name)).length >= 3 && marked.length === 1) speaking.push(marked[0])
   return { speaking: uniq(speaking), participants: uniq(participants), me }
 }
 
