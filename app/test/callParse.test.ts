@@ -105,6 +105,29 @@ describe('Zoom', () => {
     expect(readCall('zoom', [meeting(tile('Alex Morgan', true))]))
       .toEqual({ speaking: [], participants: ['Alex Morgan'], me: null })
   })
+
+  // Laurent, a Linux Zoom 7.2.1 call of 31 in gallery view: every tile said Active Speaker ("zoom talking 23 of 23"),
+  // and lines went to whoever had just scrolled into the gallery
+  it('the Linux gallery marking every tile names nobody', () => {
+    const tile = (name: string, active = false) => node('push button', { t: `video item ${name}${active ? ' Active Speaker' : ''}` })
+    const meeting = (...tiles: AxNode[]) => win(node('frame', { t: 'Meeting' }, node('panel', {}, ...tiles)), 'Meeting')
+    const everyone = ['Alex Morgan', 'Dana Smith', 'Ann Lee', 'Bo Park', 'Cy Dao']
+    expect(readCall('zoom', [meeting(...everyone.map((p) => tile(p, true)))]))
+      .toEqual({ speaking: [], participants: everyone, me: null })
+    expect(readCall('zoom', [meeting(tile('Alex Morgan', true), tile('Dana Smith', true), tile('Ann Lee'))]).speaking).toEqual([])
+  })
+
+  it('a gallery that marks every tile, with someone coming into view, never names the newcomer', () => {
+    const tile = (name: string) => node('push button', { t: `video item ${name} Active Speaker` })
+    const meeting = (names: string[]) => win(node('frame', { t: 'Meeting' }, node('panel', {}, ...names.map(tile))), 'Meeting')
+    const regulars = Array.from({ length: 20 }, (_, i) => `Person ${i + 1}`)
+    // a reading every 500 ms for two minutes; "Newcomer" is in the gallery only now and then
+    const samples = Array.from({ length: 240 }, (_, i) => {
+      const r = readCall('zoom', [meeting(i % 10 < 6 ? [...regulars, 'Newcomer'] : regulars)])
+      return { ms: i * 500, ...r, most: 21 }
+    })
+    for (let start = 0; start < 110_000; start += 7_000) expect(nameFor({ startMs: start, endMs: start + 5_000 }, samples)).toBeNull()
+  })
 })
 
 // ---- Google Meet in a browser: names as text in each tile, the talking tile marked by a class ----
