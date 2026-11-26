@@ -7,8 +7,9 @@
 /** A saved slide: its file name in the meeting's slides folder and when it was shown, in meeting time */
 export type Slide = { file: string; ms: number }
 
-/** A screen or window slides can be taken from; thumbnail: a small picture of it, as a data: URL ('' when there is none) */
-export type SlideSource = { id: string; name: string; kind: 'screen' | 'window'; thumbnail: string }
+/** A screen or window slides can be taken from; thumbnail: a small picture of it, icon: its app's icon (a window's title
+ * alone can be anonymous: Zoom's call window is just "Meeting"), both as data: URLs ('' when there is none) */
+export type SlideSource = { id: string; name: string; kind: 'screen' | 'window'; thumbnail: string; icon?: string }
 /** What the picker shows: denied, a Mac that has not allowed Yogurt to record the screen (System Settings) */
 export type SlideSourcesView = { access: 'granted' | 'denied'; sources: SlideSource[] }
 /** Slides being taken: of which source, for which meeting, how many so far. problem: the source went away, or saving failed */

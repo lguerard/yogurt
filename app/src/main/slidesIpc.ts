@@ -48,9 +48,10 @@ export function hookSlides(d: {
     if (screenAccess() === 'denied') return { access: 'denied', sources: [] }
     try {
       const mine = own()
-      const all = await desktopCapturer.getSources({ types: ['screen', 'window'], thumbnailSize: { width: 320, height: 200 }, fetchWindowIcons: false })
+      const all = await desktopCapturer.getSources({ types: ['screen', 'window'], thumbnailSize: { width: 320, height: 200 }, fetchWindowIcons: true })
       const sources = all.filter((s) => !mine.has(s.id)).map((s): SlideSource => ({
         id: s.id, name: s.name.trim() || s.id, kind: kindOf(s.id), thumbnail: s.thumbnail.isEmpty() ? '' : s.thumbnail.toDataURL(),
+        icon: !s.appIcon || s.appIcon.isEmpty() ? '' : s.appIcon.resize({ width: 32, height: 32 }).toDataURL(),
       }))
       listed = new Map(sources.map((s) => [s.id, s]))
       // the Mac asked just now, or still says no: the pictures would show only the desktop

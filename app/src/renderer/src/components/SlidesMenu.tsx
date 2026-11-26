@@ -63,9 +63,12 @@ export function SlidesMenu({ meetingId }: { meetingId: string }) {
       <p className="px-3 pb-1 pt-2 text-xs text-muted">{label}</p>
       {sources.map((s) => (
         <button key={s.id} role="menuitemradio" aria-checked={mine?.sourceId === s.id} data-testid="slides-source" data-id={s.id} onClick={() => void choose(s)} className={row}>
-          {s.thumbnail
-            ? <img src={s.thumbnail} alt="" className="h-9 w-14 flex-none rounded border border-line object-contain" />
-            : <span className="flex h-9 w-14 flex-none items-center justify-center rounded border border-line text-muted"><Monitor size={14} /></span>}
+          <span className="relative flex-none">
+            {s.thumbnail
+              ? <img src={s.thumbnail} alt="" className="h-9 w-14 rounded border border-line object-contain" />
+              : <span className="flex h-9 w-14 items-center justify-center rounded border border-line text-muted"><Monitor size={14} /></span>}
+            {s.icon ? <img src={s.icon} alt="" className="absolute -bottom-1 -right-1 h-4 w-4 rounded-sm" /> : null}
+          </span>
           <span className="min-w-0 flex-1 truncate">{s.name}</span>
           <Check size={15} aria-hidden="true" className={`shrink-0 ${mine?.sourceId === s.id ? '' : 'invisible'}`} />
         </button>
